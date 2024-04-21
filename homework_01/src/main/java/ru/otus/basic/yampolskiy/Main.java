@@ -24,23 +24,30 @@ public class Main {
         start();
     }
 
+    /**
+     * Основной метод программы, реализующий выбор метода для запуска и его вызов.
+     */
     public static void start(){
         boolean stopProgram = false;
+        Random rnd = new Random();
         while (!stopProgram){
             printMenu();
             Scanner consoleInput = new Scanner(System.in);
             switch (consoleInput.nextInt()) {
                 case 1 -> greetings();
-                case 2 -> checkSign(1, 2, -4);
+                case 2 -> checkSign(rnd.nextInt(-10, 11), rnd.nextInt(-10, 11), rnd.nextInt(-10, 11));
                 case 3 -> selectColor();
                 case 4 -> compareNumbers();
-                case 5 -> addOrSubtractAndPrint(10, 5, false);
+                case 5 -> addOrSubtractAndPrint(rnd.nextInt(-10, 11), rnd.nextInt(-10, 11), rnd.nextBoolean());
                 case 6 -> stopProgram = true;
 
             }
         }
     }
 
+    /**
+     * Метод выводит в консоль список пунктов меню
+     */
     public static void printMenu(){
         System.out.println("\n");
         System.out.print(
@@ -61,10 +68,19 @@ public class Main {
         System.out.println(message);
     }
 
+    /**
+     * Метод выводит слова "Hello" "World" "from" "Java" в столбик
+     */
     public static void greetings() {
         System.out.printf("%s\n%s\n%s\n%s\n", "Hello", "World", "from", "Java");
     }
 
+    /**
+     * Метод принимает три числа, складывает их, выводя информационное сообщение о том, положительная или отрицательная их сумма
+     * @param a
+     * @param b
+     * @param c
+     */
     public static void checkSign(int a, int b, int c) {
         if (a + b + c >= 0) {
             printMessage("Сумма положительная");
@@ -73,6 +89,9 @@ public class Main {
         }
     }
 
+    /**
+     * В методе генерируется случайное число, и в зависимости от условия выводится название цвета
+     */
     public static void selectColor() {
         int data = new Random().nextInt(0, 30);
         if(data <= 10){
@@ -84,9 +103,14 @@ public class Main {
         }
     }
 
+    /**
+     * В методе генерируется два случайных числа, после чего он выводит результат сравнения этих числе
+     */
     public static void compareNumbers() {
         int a = new Random().nextInt(-100, 101);
         int b = new Random().nextInt(-100, 101);
+        printMessage("а = " + a);
+        printMessage("b = " + b);
         if(a >= b){
             printMessage("a >= b");
         } else {
@@ -94,7 +118,17 @@ public class Main {
         }
     }
 
+    /**
+     * Метод в случае increment=true складывает два аргумента, в противном случае вычитает из первого второй
+     * @param initValue
+     * @param delta
+     * @param increment
+     */
+
     public static void addOrSubtractAndPrint(int initValue, int delta, boolean increment) {
+        printMessage("initValue = " + initValue);
+        printMessage("delta = " + delta);
+        printMessage("increment = " + increment);
         if(increment) {
             printMessage(String.valueOf(initValue + delta));
         } else {
