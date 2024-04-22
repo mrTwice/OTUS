@@ -20,6 +20,9 @@ import java.util.Scanner;
 Домашнее задание сдается через Pull Request!
  */
 public class Main {
+
+    static Scanner consoleInput = new Scanner(System.in);
+
     public static void main(String[] args) {
         start();
     }
@@ -27,12 +30,11 @@ public class Main {
     /**
      * Основной метод программы, реализующий выбор метода для запуска и его вызов.
      */
-    public static void start(){
+    static void start(){
         boolean stopProgram = false;
         Random rnd = new Random();
         while (!stopProgram){
             printMenu();
-            Scanner consoleInput = new Scanner(System.in);
             switch (consoleInput.nextInt()) {
                 case 1 -> greetings();
                 case 2 -> checkSign(rnd.nextInt(-10, 11), rnd.nextInt(-10, 11), rnd.nextInt(-10, 11));
@@ -48,7 +50,7 @@ public class Main {
     /**
      * Метод выводит в консоль список пунктов меню
      */
-    public static void printMenu(){
+    static void printMenu(){
         System.out.println("\n");
         System.out.print(
                 """
@@ -64,14 +66,14 @@ public class Main {
 
     }
 
-    public static void printMessage(String message){
+    static void printMessage(String message){
         System.out.println(message);
     }
 
     /**
      * Метод выводит слова "Hello" "World" "from" "Java" в столбик
      */
-    public static void greetings() {
+    static void greetings() {
         System.out.printf("%s\n%s\n%s\n%s\n", "Hello", "World", "from", "Java");
     }
 
@@ -81,7 +83,7 @@ public class Main {
      * @param b
      * @param c
      */
-    public static void checkSign(int a, int b, int c) {
+    static void checkSign(int a, int b, int c) {
         if (a + b + c >= 0) {
             printMessage("Сумма положительная");
         } else {
@@ -92,7 +94,7 @@ public class Main {
     /**
      * В методе генерируется случайное число, и в зависимости от условия выводится название цвета
      */
-    public static void selectColor() {
+    static void selectColor() {
         int data = new Random().nextInt(0, 30);
         if(data <= 10){
             printMessage("Красный");
@@ -106,7 +108,7 @@ public class Main {
     /**
      * В методе генерируется два случайных числа, после чего он выводит результат сравнения этих числе
      */
-    public static void compareNumbers() {
+    static void compareNumbers() {
         int a = new Random().nextInt(-100, 101);
         int b = new Random().nextInt(-100, 101);
         printMessage("а = " + a);
@@ -125,7 +127,7 @@ public class Main {
      * @param increment
      */
 
-    public static void addOrSubtractAndPrint(int initValue, int delta, boolean increment) {
+    static void addOrSubtractAndPrint(int initValue, int delta, boolean increment) {
         printMessage("initValue = " + initValue);
         printMessage("delta = " + delta);
         printMessage("increment = " + increment);
