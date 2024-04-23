@@ -32,7 +32,7 @@ public class Main {
                 case 1 -> {
                     System.out.println();
                     int sum = sumOfPositiveElements(new int[][]{{1, 1}, {-1, 1}});
-                    System.out.printf("Сумма всех положительных элементов массива: %d",sum);
+                    System.out.printf("Сумма всех положительных элементов массива: %d", sum);
                 }
 
                 case 2 -> {
@@ -58,18 +58,18 @@ public class Main {
                             {-1, -1, -8, -1, -1},
                             {-1, -1, -1, -1, 0},
                             {-1, -1, -12, -1, -1}});
-                    System.out.printf("Максимальный элемент массива: %d",max);
+                    System.out.printf("Максимальный элемент массива: %d", max);
                 }
 
                 case 5 -> {
                     System.out.println();
                     int sum = sumElementsColumnWithNumberTwo(new int[][]{
-                            {1, 0, 1, 1, 1},
+                            {1, -2, 1, 1, 1},
                             {1, 0, 1, 1, 1},
                             {1, 0, 1, 1, 1},
                             {1, 0, 1, 1, 1},
                             {1, 1, 1, 1, 1}});
-                    System.out.printf("Сумма всех элементов второго стобца: %d",sum);
+                    System.out.printf("Сумма всех элементов второго стобца: %d", sum);
                 }
                 case 6 -> flag = false;
                 default -> System.out.println("Такого пункта нет! Повторите ввод");
@@ -78,17 +78,17 @@ public class Main {
 
     }
 
-    private static void printMenu(){
+    private static void printMenu() {
         System.out.println();
         System.out.println();
         System.out.print("""
-                        1. sumOfPositiveElements()
-                        2. printArray();
-                        3. nullDiagonals();
-                        4. findMax();
-                        5. sumElementsColumnWithNumberTwo()
-                        6. Выход
-                        Выберете пункт меню: \s""");
+                1. sumOfPositiveElements()
+                2. printArray();
+                3. nullDiagonals();
+                4. findMax();
+                5. sumElementsColumnWithNumberTwo()
+                6. Выход
+                Выберете пункт меню: \s""");
     }
 
     /**
@@ -136,14 +136,21 @@ public class Main {
      */
     private static void nullDiagonals(int[][] array) {
         for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array[i].length; j++) {
-                if (i == j || j == array.length - 1 - i) {
-                    array[i][j] = 0;
-                }
-                System.out.print(array[i][j] + "  ");
-            }
-            System.out.println();
+            array[i][i] = 0;
+            array[i][array.length - i - 1] = 0;
         }
+        printArray(array);
+    }
+
+    private static void printArray(int[][] array) {
+        StringBuilder arrayBuilder = new StringBuilder();
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[i].length; j++) {
+                arrayBuilder.append(array[i][j]).append("  ");
+            }
+            arrayBuilder.append("\n");
+        }
+        System.out.println(arrayBuilder);
     }
 
     /**
@@ -174,14 +181,9 @@ public class Main {
         int sumSecondColumns = 0;
         if (array[0].length < 2) {
             return -1;
-        } else {
-            for (int i = 0; i < array.length; i++) {
-                for (int j = 0; j < array[i].length; j++) {
-                    if (j == 1) {
-                        sumSecondColumns += array[i][j];
-                    }
-                }
-            }
+        }
+        for (int i = 0; i < array.length; i++) {
+            sumSecondColumns += array[i][1];
         }
         return sumSecondColumns;
     }
