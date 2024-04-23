@@ -1,5 +1,7 @@
 package ru.otus.basic.yampolskiy;
 
+import java.util.Scanner;
+
 /*
 ● Реализовать метод sumOfPositiveElements(..), принимающий в качестве аргумента целочисленный двумерный
 массив, метод должен посчитать и вернуть сумму всех элементов массива, которые больше 0;
@@ -14,25 +16,79 @@ package ru.otus.basic.yampolskiy;
 вашему выбору), если второй строки/столбца не существует, то в качестве результата необходимо вернуть -1
  */
 public class Main {
+
+    private static Scanner consoleInput = new Scanner(System.in);
+
     public static void main(String[] args) {
+        start();
 
-//        int sum = sumOfPositiveElements(new int[][]{{1,1},{-1,1}});
-//        System.out.println(sum);
+    }
 
-//        printArray(5);
+    private static void start() {
+        boolean flag = true;
+        while (flag) {
+            printMenu();
+            switch (consoleInput.nextInt()) {
+                case 1 -> {
+                    System.out.println();
+                    int sum = sumOfPositiveElements(new int[][]{{1, 1}, {-1, 1}});
+                    System.out.printf("Сумма всех положительных элементов массива: %d",sum);
+                }
 
-//        nullDiagonals(new int[][]{{1,1,1,1,1},{1,1,1,1,1},{1,1,1,1,1},{1,1,1,1,1},{1,1,1,1,1}});
+                case 2 -> {
+                    System.out.println();
+                    printArray(5);
+                }
 
-//        int max = findMax(new int[][]{{-1,-1,-1,-1,-9},{-1,-1,-1,-1,-1},{-1,-1,-8,-1,-1},{-1,-1,-1,-1,0},{-1,-1,-12,-1,-1}});
-//        System.out.println(max);
+                case 3 -> {
+                    System.out.println();
+                    nullDiagonals(new int[][]{
+                            {1, 1, 1, 1, 1},
+                            {1, 1, 1, 1, 1},
+                            {1, 1, 1, 1, 1},
+                            {1, 1, 1, 1, 1},
+                            {1, 1, 1, 1, 1}});
+                }
 
-        int sum = sumElementsColumnWithNumberTwo(new int[][]{
-                {1, 0, 1, 1, 1},
-                {1, 0, 1, 1, 1},
-                {1, 0, 1, 1, 1},
-                {1, 0, 1, 1, 1},
-                {1, 1, 1, 1, 1}});
-        System.out.println(sum);
+                case 4 -> {
+                    System.out.println();
+                    int max = findMax(new int[][]{
+                            {-1, -1, -1, -1, -9},
+                            {-1, -1, -1, -1, -1},
+                            {-1, -1, -8, -1, -1},
+                            {-1, -1, -1, -1, 0},
+                            {-1, -1, -12, -1, -1}});
+                    System.out.printf("Максимальный элемент массива: %d",max);
+                }
+
+                case 5 -> {
+                    System.out.println();
+                    int sum = sumElementsColumnWithNumberTwo(new int[][]{
+                            {1, 0, 1, 1, 1},
+                            {1, 0, 1, 1, 1},
+                            {1, 0, 1, 1, 1},
+                            {1, 0, 1, 1, 1},
+                            {1, 1, 1, 1, 1}});
+                    System.out.printf("Сумма всех элементов второго стобца: %d",sum);
+                }
+                case 6 -> flag = false;
+                default -> System.out.println("Такого пункта нет! Повторите ввод");
+            }
+        }
+
+    }
+
+    private static void printMenu(){
+        System.out.println();
+        System.out.println();
+        System.out.print("""
+                        1. sumOfPositiveElements()
+                        2. printArray();
+                        3. nullDiagonals();
+                        4. findMax();
+                        5. sumElementsColumnWithNumberTwo()
+                        6. Выход
+                        Выберете пункт меню: \s""");
     }
 
     /**
@@ -65,11 +121,8 @@ public class Main {
         }
         System.out.println();
         for (int i = 0; i < size; i++) {
+            System.out.print(i + " ");
             for (int j = 0; j < size; j++) {
-
-                if (j == 0) {
-                    System.out.print(i + " ");
-                }
                 System.out.printf("*  ");
             }
             System.out.println();
