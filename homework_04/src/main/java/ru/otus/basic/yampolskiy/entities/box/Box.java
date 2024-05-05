@@ -4,23 +4,23 @@ public class Box <T> implements Openable, Closeable{
     private double height;
     private double depth;
     private double width;
-    private BoxColor boxColor;
+    private BoxColor color;
     private boolean isOpen;
     private T item;
 
-    public Box(double height, double depth, double width, BoxColor boxColor) {
+    public Box(double height, double depth, double width, BoxColor color) {
         this.height = height;
         this.depth = depth;
         this.width = width;
-        this.boxColor = boxColor;
+        this.color = color;
         this.isOpen = true;
     }
 
-    public Box(double height, double depth, double width, BoxColor boxColor, T item) {
+    public Box(double height, double depth, double width, BoxColor color, T item) {
         this.height = height;
         this.depth = depth;
         this.width = width;
-        this.boxColor = boxColor;
+        this.color = color;
         this.item = item;
         this.isOpen = false;
     }
@@ -34,25 +34,18 @@ public class Box <T> implements Openable, Closeable{
         return width;
     }
 
-    public void setWidth(double width) {
-        this.width = width;
-    }
 
     public BoxColor getBoxColor() {
-        return boxColor;
+        return color;
     }
 
-    public void changeColor(BoxColor boxColor) {
-        this.boxColor = boxColor;
+    public void changeColor(BoxColor color) {
+        this.color = color;
     }
 
     public boolean isOpen() {
         
         return isOpen;
-    }
-
-    public void setOpen(boolean state) {
-        isOpen = state;
     }
 
     public void printInfo() {
@@ -85,7 +78,7 @@ public class Box <T> implements Openable, Closeable{
         return "Высота: " + height + "\n" +
                 "Глубина: " + depth + "\n" +
                 "Ширина: " + width + "\n" +
-                "Цвет: " + boxColor.toString() + "\n";
+                "Цвет: " + color.toString() + "\n";
 
     }
 
