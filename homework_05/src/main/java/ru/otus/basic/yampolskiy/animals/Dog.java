@@ -8,6 +8,9 @@ public class Dog extends Animal{
 
     @Override
     public int swim(int distance) {
+        if(distance < 0) {
+            throw new RuntimeException("Отрицательное значение дистанции");
+        }
         int timeElapsed =0;
         if (distance > currentEndurance / DOG_SWIM_COEFFICIENT) {
             System.out.printf("Пес " + nickname +" проплыл %dм и Устал!", currentEndurance / DOG_SWIM_COEFFICIENT);

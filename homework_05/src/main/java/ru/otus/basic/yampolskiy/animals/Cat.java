@@ -8,6 +8,9 @@ public class Cat extends Animal{
 
     @Override
     public int swim(int distance) {
+        if(distance < 0) {
+            throw new RuntimeException("Отрицательное значение дистанции");
+        }
         System.out.println("Кот " + nickname + " пошел ко дну.");
         return -1;
     }

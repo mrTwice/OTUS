@@ -21,6 +21,9 @@ public abstract class Animal {
     }
 
     public int run(int distance) {
+        if(distance < 0) {
+            throw new RuntimeException("Отрицательное значение дистанции");
+        }
         String animalType = getAnimalType();
         int timeElapsed =0;
         if (distance > currentEndurance) {
@@ -47,6 +50,9 @@ public abstract class Animal {
     }
 
     public void setCurrentEndurance(int currentEndurance) {
+        if(currentEndurance < 0) {
+            throw new RuntimeException("Отрицательное значение выносливости");
+        }
         this.currentEndurance = currentEndurance;
         String animalType = getAnimalType();
         isTired = false;

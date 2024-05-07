@@ -8,6 +8,9 @@ public class Horse extends Animal{
 
     @Override
     public int swim(int distance) {
+        if(distance < 0) {
+            throw new RuntimeException("Отрицательное значение дистанции");
+        }
         int timeElapsed =0;
         if (distance > currentEndurance / HORSE_SWIM_COEFFICIENT) {
             System.out.printf("Конь " + nickname +" проплыл %dм и Устал!", currentEndurance / HORSE_SWIM_COEFFICIENT);
