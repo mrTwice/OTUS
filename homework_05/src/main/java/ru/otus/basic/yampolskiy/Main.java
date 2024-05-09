@@ -16,13 +16,13 @@ public class Main {
         dog.info();
         dog.setCurrentEndurance(20);
         dog.info();
-        System.out.println(dog.swim(10));
+        System.out.println(dog.swim(50));
 
         Horse horse = new Horse("Мерен", 4, 2, 40);
         System.out.println(horse.run(10));
         horse.info();
         horse.setCurrentEndurance(40);
         horse.info();
-        System.out.println(horse.swim(10));
+        System.out.println(horse.swim(50));
     }
 }

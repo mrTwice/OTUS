@@ -3,16 +3,7 @@ package ru.otus.basic.yampolskiy.animals;
 public class Cat extends Animal{
 
     public Cat(String nickname, int runningSpeed, int initialEndurance) {
-        super("Cat", nickname, runningSpeed, 0, initialEndurance);
-    }
-
-    @Override
-    public int swim(int distance) {
-        if(distance < 0) {
-            throw new RuntimeException("Отрицательное значение дистанции");
-        }
-        System.out.println("Кот " + nickname + " пошел ко дну.");
-        return -1;
+        super("Кот", nickname, runningSpeed, 0, initialEndurance, null);
     }
 
     @Override
