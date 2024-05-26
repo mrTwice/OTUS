@@ -4,7 +4,6 @@ import java.util.*;
 
 import static ru.otus.basic.yampolskiy.Standard.*;
 
-
 public class Main {
     public static void main(String[] args) {
         System.out.println("Реализуйте метод, принимающий в качестве аргументов числа min и max, и возвращающий ArrayList с набором последовательных значений в указанном диапазоне (min и max включительно, шаг - 1)");
