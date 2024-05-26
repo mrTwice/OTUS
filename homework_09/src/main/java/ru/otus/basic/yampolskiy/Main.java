@@ -62,6 +62,4 @@ public class Main {
         System.out.println(getYoungestEmployee(employees));
         System.out.println(ru.otus.basic.yampolskiy.WithStreamApi.getYoungestEmployee(employees));
     }
-
-
 }
