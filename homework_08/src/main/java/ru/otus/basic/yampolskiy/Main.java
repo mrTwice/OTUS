@@ -8,25 +8,37 @@ public class Main {
 
     static final String[][] FIRST_ARRAY = {
             {"1", "1", "1", "1"},
-            {"a", "-1", "1", "1"}
+            {"1", "1", "1", "1"},
+            {"1", "1", "1", "1"},
+            {"1", "-1", "1"}
     };
 
     static final String[][] SECOND_ARRAY = {
             {"1", "1", "1", "1"},
-            {"a", "1", "1"}
+            {"1", "1", "1", "1"},
+            {"1", "1", "1", "1"},
+            {"ф", "1", "1", "1"},
     };
 
     public static void main(String[] args) {
         try {
-            System.out.println(convertStringToIntAndSumAllElements(SECOND_ARRAY));
+            System.out.println(convertStringToIntAndSumAllElements(FIRST_ARRAY));
         } catch (AppArraySizeException | AppArrayDataException e) {
             System.out.println(e.getMessage());
         }
     }
 
     public static int convertStringToIntAndSumAllElements(String[][] array) throws AppArraySizeException, AppArrayDataException {
-        if (array[0].length != 4 || array[1].length != 4) {
-            throw new AppArraySizeException(array);
+        if (array.length != 4 || array[0].length != 4 || array[1].length != 4 || array[2].length != 4  || array[3].length != 4) {
+            if (array.length != 4) {
+                throw new AppArraySizeException( array.length, "В массиве должно быть четыре строки. Он содержит: ");
+            }
+
+            for (int i = 0; i < array.length; i++) {
+                if (array[i].length != 4) {
+                    throw new AppArraySizeException(i, "В строке должно быть 4 элементы. Индекс текущей строки: ");
+                }
+            }
         }
         int sum = 0;
         for (int i = 0; i < array.length; i++) {
@@ -41,6 +53,4 @@ public class Main {
         }
         return sum;
     }
-
-
 }

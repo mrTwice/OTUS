@@ -2,13 +2,15 @@ package ru.otus.basic.yampolskiy.exeptions;
 
 public class AppArraySizeException extends Exception{
 
-    private String[][] array;
+    private int value;
+    private String message;
 
-    public AppArraySizeException( String[][] array) {
-        this.array = array;
+    public AppArraySizeException( int value, String message) {
+        this.value = value;
+        this.message = message;
     }
 
     public String getMessage() {
-        return "Передан массив некорректной размерности: " + "[" + array[0].length + "," + array[1].length + "]";
+        return message + value;
     }
 }
