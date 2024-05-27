@@ -11,12 +11,23 @@ import java.util.Set;
 public class Bicycle implements Transport {
 
     private final int HUMAN_OVERCOMING_COEFFICIENT = 3;
-
     private final Set<String> bicycleUnCompatibleTerrains = new HashSet<>();
+    private Driver driver;
 
     public Bicycle() {
         bicycleUnCompatibleTerrains.add("Болото");
     }
+
+    @Override
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+    }
+
+    @Override
+    public void removeDriver() {
+        driver = null;
+    }
+
 
     @Override
     public String getType() {
@@ -24,7 +35,11 @@ public class Bicycle implements Transport {
     }
 
     @Override
-    public int move(Terrain terrain, int distance, Driver driver) {
+    public int move(Terrain terrain, int distance) {
+        if(driver == null) {
+            System.out.println("Велосипед не может ехать без водителя");
+            return 0;
+        }
         if(bicycleUnCompatibleTerrains.contains(terrain.getType())){
             System.out.printf("Велосипед не может ехать по %s.\n", terrain.getType());
             return 0;

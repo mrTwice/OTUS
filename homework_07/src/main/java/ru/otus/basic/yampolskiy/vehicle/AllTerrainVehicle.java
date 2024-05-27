@@ -9,10 +9,22 @@ import ru.otus.basic.yampolskiy.interfaces.Transport;
 public class AllTerrainVehicle implements Transport {
     private final int FUEL_CONSUMPTION = 25;
     private int fuel;
+    private Driver driver;
 
     public AllTerrainVehicle(int fuel) {
         this.fuel = fuel;
     }
+
+    @Override
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+    }
+
+    @Override
+    public void removeDriver() {
+        driver = null;
+    }
+
 
     @Override
     public String getType() {
@@ -20,7 +32,11 @@ public class AllTerrainVehicle implements Transport {
     }
 
     @Override
-    public int move(Terrain terrain, int distance, Driver driver) {
+    public int move(Terrain terrain, int distance) {
+        if(driver == null) {
+            System.out.println("Вездеход не может ехать без водителя");
+            return 0;
+        }
         Human human = (Human) driver;
         int overcomingDistance =  fuel * 100 / FUEL_CONSUMPTION;
         if (distance > overcomingDistance) {

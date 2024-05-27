@@ -23,6 +23,8 @@ public class Main {
         Transport transport3 = new AllTerrainVehicle(340);
 
         human.getIntoVehicle(transport3);
+        human.getOutVehicle();
+        human.getIntoVehicle((transport1));
         human.go(terrain, 1500);
 
     }

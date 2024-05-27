@@ -13,6 +13,7 @@ public class Car implements Transport {
     private final Set<String> carUnCompatibleTerrains = new HashSet<>();
     private final int FUEL_CONSUMPTION = 10;
     private int fuel;
+    private Driver driver;
 
     public Car(int fuel) {
         this.fuel = fuel;
@@ -21,12 +22,27 @@ public class Car implements Transport {
     }
 
     @Override
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+    }
+
+    @Override
+    public void removeDriver() {
+        driver = null;
+    }
+
+
+    @Override
     public String getType() {
         return "Машина";
     }
 
     @Override
-    public int move(Terrain terrain, int distance, Driver driver) {
+    public int move(Terrain terrain, int distance) {
+        if(driver == null) {
+            System.out.println("Автомобиль не может ехать без водителя");
+            return 0;
+        }
         if(carUnCompatibleTerrains.contains(terrain.getType())){
             System.out.printf("Автомобиль не может ехать по %s.\n", terrain.getType());
             return 0;

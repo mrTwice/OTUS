@@ -9,6 +9,7 @@ public class Human implements Driver, LivingBeing {
     private final String name;
     private int stamina;
     private Transport transport;
+    private boolean isDriver;
 
     public Human(String name, int stamina) {
         this.name = name;
@@ -26,7 +27,7 @@ public class Human implements Driver, LivingBeing {
 
         if(transport != null) {
             System.out.printf("%s использует %s.\n", name, transport.getType());
-            int distanceOnTransport = transport.move(terrain, currentDistance, this);
+            int distanceOnTransport = transport.move(terrain, currentDistance);
             currentDistance -= distanceOnTransport;
             if(stamina == 0) {
                 System.out.printf("%s преодолел %s по %s и ему нужен отдых.\n", name, distanceOnTransport, terrain.getType());
@@ -65,14 +66,22 @@ public class Human implements Driver, LivingBeing {
 
     @Override
     public boolean getIntoVehicle(Transport transport) {
+        if(isDriver) {
+            System.out.println("Нельзя управлять двумя транспортными средствами одновременно");
+            return false;
+        }
         this.transport = transport;
+        transport.setDriver(this);
+        isDriver = true;
         return true;
     }
 
     @Override
     public boolean getOutVehicle() {
         if(transport != null){
+            transport.removeDriver();
             transport = null;
+            isDriver=false;
             return true;
         }
         System.out.printf("У %s нет транспорта", name);

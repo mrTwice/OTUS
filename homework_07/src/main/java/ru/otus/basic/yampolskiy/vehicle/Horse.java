@@ -14,6 +14,7 @@ public class Horse implements LivingBeing, Transport {
     private final Set<String> horseUnCompatibleTerrains = new HashSet<>();
     private final String nickname;
     private int stamina;
+    private Driver driver;
 
     public Horse(String nickname, int stamina) {
         this.nickname = nickname;
@@ -22,12 +23,26 @@ public class Horse implements LivingBeing, Transport {
     }
 
     @Override
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+    }
+
+    @Override
+    public void removeDriver() {
+        driver = null;
+    }
+
+    @Override
     public String getType() {
         return "Лошадь";
     }
 
     @Override
-    public int move(Terrain terrain, int distance, Driver driver) {
+    public int move(Terrain terrain, int distance) {
+        if(driver == null) {
+            System.out.println("Лошадь не может скакать без наездника");
+            return 0;
+        }
         if(horseUnCompatibleTerrains.contains(terrain.getType())){
             System.out.printf("Конь %s не может идти по %s.\n", nickname, terrain.getType());
             return 0;
