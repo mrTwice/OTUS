@@ -14,7 +14,11 @@ public class Plate {
     }
 
     public boolean getFood(int amountFood) {
-        if(amountFood > currentAmountFood) {
+        if (amountFood < 0) {
+            System.out.println("Нельзя получить отрицательное количество еды");
+            return false;
+        }
+        if (amountFood > currentAmountFood) {
             System.out.println("В тарелке не хватает " + amountFood + " ед. еды");
             return false;
         }
@@ -25,7 +29,7 @@ public class Plate {
     }
 
     public void addFoodToPlate(int amountFood) {
-        if( amountFood + currentAmountFood > maxAmountFood) {
+        if (amountFood + currentAmountFood > maxAmountFood) {
             System.out.print("Невозможно поместить в тарелку" + amountFood + " ед. еды.");
             return;
         }

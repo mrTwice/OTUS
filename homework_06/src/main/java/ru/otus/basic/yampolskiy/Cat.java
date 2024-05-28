@@ -2,8 +2,8 @@ package ru.otus.basic.yampolskiy;
 
 public class Cat {
     private final String nickname;
-    private boolean hungry;
     private final int appetite;
+    private boolean hungry;
 
     public Cat(String nickname, int appetite) {
         this.nickname = nickname;
@@ -12,7 +12,7 @@ public class Cat {
     }
 
     public void toEat(Plate plate) {
-        if(hungry && plate.getFood(appetite)){
+        if (hungry && plate.getFood(appetite)) {
             hungry = false;
             System.out.println(nickname + " наелся");
         } else {

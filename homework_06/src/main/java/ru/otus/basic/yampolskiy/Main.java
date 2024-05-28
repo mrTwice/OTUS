@@ -17,7 +17,7 @@ public class Main {
                 CatFactory.createCat("Пончик")
         };
 
-        for(Cat cat: cats) {
+        for (Cat cat : cats) {
             System.out.println();
             System.out.printf("Кот %s подошел к тарелке\n", cat.getNickname());
             cat.toEat(plate);
