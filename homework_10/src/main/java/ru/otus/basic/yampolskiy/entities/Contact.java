@@ -43,8 +43,8 @@ public class Contact {
         return phones.putIfAbsent(phoneNumber.getTitle(), phoneNumber);
     }
 
-    public PhoneNumber  removePhoneNumber (PhoneNumber phoneNumber) {
-        return phones.remove(phoneNumber);
+    public boolean  removePhoneNumber (PhoneNumber phoneNumber) {
+        return phones.remove(phoneNumber.getTitle(), phoneNumber);
     }
 
     @Override

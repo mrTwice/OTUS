@@ -24,8 +24,8 @@ public class Presenter {
                     String firstname = view.getInput("Введите имя: ");
                     String lastname = view.getInput("Введите фамилию: ");
                     String phoneNumber = view.getInput("Введите номер телефона: ");
-                    String titlePhonenumber = view.getInput("Укажите тип телефона: ");
-                    PhoneNumber newPhonenumber = new PhoneNumber(titlePhonenumber, phoneNumber);
+                    String titlePhoneNumber = view.getInput("Укажите тип телефона: ");
+                    PhoneNumber newPhonenumber = new PhoneNumber(titlePhoneNumber, phoneNumber);
                     Contact contact = new Contact(firstname, lastname);
                     contact.addNewPhoneNumber(newPhonenumber);
                     view.printInfo("Контакт " + phoneBook.addNew(contact).getFullname() + " успешно добавлен.");
@@ -33,8 +33,8 @@ public class Presenter {
                 case 3 -> {
                     List<Contact> contacts = phoneBook.getContacts();
                     view.printContacts(contacts);
-                    int choise = view.getChoise("Укажите номер контакта для удаления: ") -1 ;
-                    Contact contactForDelete = contacts.get(choise);
+                    int choice = view.getChoice("Укажите номер контакта для удаления: ") -1 ;
+                    Contact contactForDelete = contacts.get(choice);
                     if(phoneBook.remove(contactForDelete))
                         view.printInfo("Контакт успешно удален.");
                 }
@@ -45,8 +45,8 @@ public class Presenter {
                     view.printContacts(contacts);
                 }
                 case 5 -> {
-                    String phonenumber = view.getInput("Введите номер телефона для поиска: ");
-                    Contact contact = phoneBook.findContactByPhonenumber( phonenumber);
+                    String phoneNumber = view.getInput("Введите номер телефона для поиска: ");
+                    Contact contact = phoneBook.findContactByPhoneNumber( phoneNumber);
                     if(contact != null)
                         view.printInfo(contact.toString());
                 }

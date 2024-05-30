@@ -26,7 +26,7 @@ public class View {
         return consoleInput.nextInt();
     }
 
-    public int getChoise(String message) {
+    public int getChoice(String message) {
         System.out.print(message);
         return consoleInput.nextInt() ;
     }

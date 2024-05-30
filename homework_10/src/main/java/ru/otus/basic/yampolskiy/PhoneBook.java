@@ -30,7 +30,7 @@ public class PhoneBook {
         return contacts.remove(contact.getLastName() + " " + contact.getFirstName(), contact);
     }
 
-    public Contact findContactByPhonenumber(String phonenumberStr) {
+    public Contact findContactByPhoneNumber(String phoneNumberStr) {
         return contacts
                 .values()
                 .stream()
@@ -40,7 +40,7 @@ public class PhoneBook {
                         .stream()
                         .allMatch(phoneNumber -> phoneNumber
                                 .getNumber()
-                                .equals(phonenumberStr)
+                                .equals(phoneNumberStr)
                         )
                 )
                 .findAny()
