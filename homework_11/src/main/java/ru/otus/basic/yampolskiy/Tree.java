@@ -1,17 +1,37 @@
 package ru.otus.basic.yampolskiy;
 
-public class Tree {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Tree implements SearchTree {
     private Node root;
+    private final Node NIL;
+
+    public Tree(List<Integer> ints) {
+        NIL = new Node(0, Color.BLACK);
+        root = NIL;
+        for (Integer i : ints) {
+            add(i);
+        }
+    }
+
+    public Node getRoot() {
+        return root;
+    }
+
+    public Node getNilNode() {
+        return NIL;
+    }
 
     public boolean add(int value) {
-        if (root == null) { // Если корня нет
-            root = new Node(value, Color.BLACK); // устанавливаем значение для корня, цвет корня всегда черный
+        if (root == NIL) {
+            root = new Node(value);
             return true;
         } else {
             boolean result = addNode(root, value);
             root = rebalance(root);
             root.color = Color.BLACK;
-            return  result;
+            return result;
         }
     }
 
@@ -19,22 +39,23 @@ public class Tree {
         if (currentNode.value == value) {
             return false;
         } else {
+            boolean result;
             if (currentNode.value > value) {
-                if (currentNode.left != null) {
-                    boolean result = addNode(currentNode.left, value);
+                if (currentNode.left != NIL) {
+                    result = addNode(currentNode.left, value);
                     currentNode.left = rebalance(currentNode.left);
                     return result;
                 } else {
-                    currentNode.left = new Node(value, Color.RED);
+                    currentNode.left = new Node(value);
                     return true;
                 }
             } else {
-                if (currentNode.right != null) {
-                    boolean result = addNode(currentNode.right, value);
+                if (currentNode.right != NIL) {
+                    result = addNode(currentNode.right, value);
                     currentNode.right = rebalance(currentNode.right);
                     return result;
                 } else {
-                    currentNode.right = new Node(value, Color.RED);
+                    currentNode.right = new Node(value);
                     return true;
                 }
             }
@@ -47,23 +68,23 @@ public class Tree {
         node.color = Color.RED;
     }
 
-    private Node rightTurn(Node oldRootNode) {
-        Node newRootNode = oldRootNode.right;   // Новым корнем станет правый ребенок старого корня
-        Node middle = oldRootNode.right.left;   // Средний элемент, который был левым потомком правого элемента старого корня
-        newRootNode.left = oldRootNode;         // Левым элементом нового корня становится старый корень
-        oldRootNode.right = middle;             // Правым элементов старого корня становится средний элемент
-        newRootNode.color = oldRootNode.color;  // новый корень наследует цвет старого
-        oldRootNode.color = Color.RED;          // старый корень становится красным
+    private Node leftTurn(Node oldRootNode) {
+        Node newRootNode = oldRootNode.right;
+        Node middle = oldRootNode.right.left;
+        newRootNode.left = oldRootNode;
+        oldRootNode.right = middle;
+        newRootNode.color = oldRootNode.color;
+        oldRootNode.color = Color.RED;
         return newRootNode;
     }
 
-    private Node leftTurn(Node oldRootNode) {
-        Node newRootNode = oldRootNode.left;    // В новый корень кладем левый элемент старого корня
-        Node middle = oldRootNode.left.right;   // Средним элементом будет правый потомок левого элемента старого корня
-        newRootNode.right = oldRootNode;        // Правым ребенком нового корня становится старый корень
-        oldRootNode.left = middle;              // Левым потомком правого элемента нового корня становится средний элемент
-        newRootNode.color = oldRootNode.color;  // новый корень наследует цвет старого
-        oldRootNode.color = Color.RED;          // старый корень становится красным
+    private Node rightTurn(Node oldRootNode) {
+        Node newRootNode = oldRootNode.left;
+        Node middle = oldRootNode.left.right;
+        newRootNode.right = oldRootNode;
+        oldRootNode.left = middle;
+        newRootNode.color = oldRootNode.color;
+        oldRootNode.color = Color.RED;
         return newRootNode;
     }
 
@@ -72,18 +93,18 @@ public class Tree {
         boolean needRebalance;
         do {
             needRebalance = false;
-            if (result.right != null && result.right.color == Color.RED &&
-                    (result.left == null || result.left.color == Color.BLACK)) {
-                needRebalance = true;
-                result = rightTurn(result);
-            }
-            if (result.left != null && result.left.color == Color.RED &&
-                    result.left.left != null && result.left.left.color == Color.RED) {
+            if (result.right != NIL && result.right.isRed() &&
+                    (result.left == NIL || !result.left.isRed())) {
                 needRebalance = true;
                 result = leftTurn(result);
             }
-            if (result.left != null && result.left.color == Color.RED &&
-                    result.right != null && result.right.color == Color.RED) {
+            if (result.left != NIL && result.left.isRed() &&
+                    result.left.left != NIL && result.left.left.isRed()) {
+                needRebalance = true;
+                result = rightTurn(result);
+            }
+            if (result.left != NIL && result.left.isRed() &&
+                    result.right != NIL && result.right.isRed()) {
                 needRebalance = true;
                 colorSwipe(result);
             }
@@ -91,6 +112,36 @@ public class Tree {
         return result;
     }
 
+    @Override
+    public boolean find(int element) {
+        Node currentNode = root;
+        while (currentNode != NIL) {
+            if (currentNode.value == element) {
+                return true;
+            }
+            if (currentNode.value > element) {
+                currentNode = currentNode.left;
+            } else {
+                currentNode = currentNode.right;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public List<Integer> getSortedList() {
+        List<Integer> sortedList = new ArrayList<>();
+        inOrderTraversal(root, sortedList);
+        return sortedList;
+    }
+
+    private void inOrderTraversal(Node node, List<Integer> sortedList) {
+        if (node != NIL) {
+            inOrderTraversal(node.left, sortedList);
+            sortedList.add(node.value);
+            inOrderTraversal(node.right, sortedList);
+        }
+    }
 
     public class Node {
         private int value;
@@ -100,15 +151,39 @@ public class Tree {
 
         public Node(int value) {
             this.value = value;
-            color = Color.RED;
+            this.color = Color.RED;
+            this.left = NIL;
+            this.right = NIL;
         }
 
         public Node(int value, Color color) {
             this.value = value;
             this.color = color;
+            this.left = NIL;
+            this.right = NIL;
         }
 
+        public int getValue() {
+            return value;
+        }
+
+        public Node getLeft() {
+            return left;
+        }
+
+        public Node getRight() {
+            return right;
+        }
+
+        public Color getColor() {
+            return color;
+        }
+
+        public boolean isRed() {
+            return color == Color.RED;
+        }
     }
 
     private enum Color {RED, BLACK}
+
 }

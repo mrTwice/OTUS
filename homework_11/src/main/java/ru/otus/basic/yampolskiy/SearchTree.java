@@ -2,12 +2,12 @@ package ru.otus.basic.yampolskiy;
 
 import java.util.List;
 
-public interface SearchTree<T> {
+public interface SearchTree{
     /**
      * @param element to find
      * @return element if exists, otherwise - null
      */
-    T find(T element);
+    boolean find(int element);
 
-    List<T> getSortedList();
+    List<Integer> getSortedList();
 }
