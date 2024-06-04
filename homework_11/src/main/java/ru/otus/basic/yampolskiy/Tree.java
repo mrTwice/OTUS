@@ -4,75 +4,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tree implements SearchTree {
-    private Node root;
-    private final Node NIL;
+    private final Node NIL = new Node(0, Color.BLACK);
+    private Node root = NIL;
 
     public Tree(List<Integer> ints) {
-        NIL = new Node(0, Color.BLACK);
-        root = NIL;
         for (Integer i : ints) {
             add(i);
         }
     }
 
-    public Node getRoot() {
-        return root;
+    public void add(int value) {
+
+        root = addNode(root, value);
+        root.color = Color.BLACK;
+
     }
 
-    public Node getNilNode() {
-        return NIL;
+    private Node addNode(Node currentNode, int value) {
+
+        if (currentNode == NIL) return new Node(value);
+
+        if (value < currentNode.value) currentNode.left = addNode(currentNode.left, value);
+        else if (value > currentNode.value) currentNode.right = addNode(currentNode.right, value);
+
+        if (isRed(currentNode.right) && !isRed(currentNode.left))
+            currentNode = leftTurn(currentNode);
+
+        if (isRed(currentNode.left) && isRed(currentNode.left.left))
+            currentNode = rightTurn(currentNode);
+
+        if (isRed(currentNode.left) && isRed(currentNode.right))
+            colorSwipe(currentNode);
+
+        return currentNode;
     }
 
-    public boolean add(int value) {
-        if (root == NIL) {
-            root = new Node(value);
-            return true;
-        } else {
-            boolean result = addNode(root, value);
-            root = rebalance(root);
-            root.color = Color.BLACK;
-            return result;
-        }
-    }
-
-    private boolean addNode(Node currentNode, int value) {
-        if (currentNode.value == value) {
-            return false;
-        } else {
-            boolean result;
-            if (currentNode.value > value) {
-                if (currentNode.left != NIL) {
-                    result = addNode(currentNode.left, value);
-                    currentNode.left = rebalance(currentNode.left);
-                    return result;
-                } else {
-                    currentNode.left = new Node(value);
-                    return true;
-                }
-            } else {
-                if (currentNode.right != NIL) {
-                    result = addNode(currentNode.right, value);
-                    currentNode.right = rebalance(currentNode.right);
-                    return result;
-                } else {
-                    currentNode.right = new Node(value);
-                    return true;
-                }
-            }
-        }
-    }
 
     private void colorSwipe(Node node) {
-        node.left.color = Color.BLACK;
-        node.right.color = Color.BLACK;
-        node.color = Color.RED;
+        node.color = isRed(node) ? Color.BLACK : Color.RED;
+        node.left.color = isRed(node.left) ? Color.BLACK : Color.RED;
+        node.right.color = isRed(node.right) ? Color.BLACK : Color.RED;
     }
 
     private Node leftTurn(Node oldRootNode) {
         Node newRootNode = oldRootNode.right;
-        Node middle = oldRootNode.right.left;
+        oldRootNode.right = newRootNode.left;
         newRootNode.left = oldRootNode;
-        oldRootNode.right = middle;
         newRootNode.color = oldRootNode.color;
         oldRootNode.color = Color.RED;
         return newRootNode;
@@ -80,36 +57,11 @@ public class Tree implements SearchTree {
 
     private Node rightTurn(Node oldRootNode) {
         Node newRootNode = oldRootNode.left;
-        Node middle = oldRootNode.left.right;
+        oldRootNode.left = newRootNode.right;
         newRootNode.right = oldRootNode;
-        oldRootNode.left = middle;
         newRootNode.color = oldRootNode.color;
         oldRootNode.color = Color.RED;
         return newRootNode;
-    }
-
-    private Node rebalance(Node node) {
-        Node result = node;
-        boolean needRebalance;
-        do {
-            needRebalance = false;
-            if (result.right != NIL && result.right.isRed() &&
-                    (result.left == NIL || !result.left.isRed())) {
-                needRebalance = true;
-                result = leftTurn(result);
-            }
-            if (result.left != NIL && result.left.isRed() &&
-                    result.left.left != NIL && result.left.left.isRed()) {
-                needRebalance = true;
-                result = rightTurn(result);
-            }
-            if (result.left != NIL && result.left.isRed() &&
-                    result.right != NIL && result.right.isRed()) {
-                needRebalance = true;
-                colorSwipe(result);
-            }
-        } while (needRebalance);
-        return result;
     }
 
     @Override
@@ -141,6 +93,18 @@ public class Tree implements SearchTree {
             sortedList.add(node.value);
             inOrderTraversal(node.right, sortedList);
         }
+    }
+
+    public Node getRoot() {
+        return root;
+    }
+
+    public Node getNilNode() {
+        return NIL;
+    }
+
+    public boolean isRed(Node node) {
+        return node.isRed();
     }
 
     public class Node {
@@ -187,3 +151,5 @@ public class Tree implements SearchTree {
     private enum Color {RED, BLACK}
 
 }
+
+
