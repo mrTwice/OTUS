@@ -1,8 +1,6 @@
 package ru.otus.basic.yampolskiy.entities;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Contact {
     private String firstName;
@@ -15,8 +13,8 @@ public class Contact {
         this.phones = new HashMap<>();
     }
 
-    public Map<String, PhoneNumber> getPhones() {
-        return phones;
+    public List<PhoneNumber> getPhones() {
+        return new ArrayList<>(phones.values());
     }
 
     public String getFirstName() {

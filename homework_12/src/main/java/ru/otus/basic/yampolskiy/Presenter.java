@@ -2,6 +2,8 @@ package ru.otus.basic.yampolskiy;
 
 import ru.otus.basic.yampolskiy.entities.Contact;
 import ru.otus.basic.yampolskiy.entities.PhoneNumber;
+import ru.otus.basic.yampolskiy.utils.Loader;
+import ru.otus.basic.yampolskiy.utils.Saver;
 
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class Presenter {
     }
 
     public void create() {
+        phoneBook.setContacts(Loader.loadFromFile());
         boolean flag = true;
         while (flag) {
             view.printMenu();
@@ -50,10 +53,12 @@ public class Presenter {
                     if(contact != null)
                         view.printInfo(contact.toString());
                 }
-                case 6 -> flag = false;
+                case 6 -> {
+                    flag = false;
+                    Saver.saveToFile(phoneBook);
+                }
                 default -> System.out.println("Такого пункта нет.");
             }
         }
     }
-
 }

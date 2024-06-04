@@ -34,16 +34,12 @@ public class PhoneBook {
         return contacts
                 .values()
                 .stream()
-                .filter(contact -> contact
-                        .getPhones()
-                        .values()
-                        .stream()
-                        .allMatch(phoneNumber -> phoneNumber
-                                .getNumber()
-                                .equals(phoneNumberStr)
-                        )
-                )
+                .filter(contact -> contact.getPhones().stream().allMatch(phoneNumber -> phoneNumber.getNumber().equals(phoneNumberStr)))
                 .findAny()
                 .orElse(null);
+    }
+
+    public void setContacts(Map<String, Contact> loadContacts) {
+        loadContacts.values().forEach(this::addNew);
     }
 }
