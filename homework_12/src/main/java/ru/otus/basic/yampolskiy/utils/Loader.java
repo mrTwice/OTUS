@@ -14,40 +14,36 @@ import java.util.TreeMap;
 public class Loader {
 
     private static final String DIRECTORY_PATH = "PhoneBook";
+    private static final Map<String, Contact> CONTACTS = new TreeMap<>(Comparator.comparing(String::toLowerCase));
 
     public static Map<String, Contact> loadFromFile() {
-        Map<String, Contact> contacts = new TreeMap<>(Comparator.comparing(String::toLowerCase));
-        String directoryPath = DIRECTORY_PATH;
-
-        File directory = new File(directoryPath);
+        File directory = new File(DIRECTORY_PATH);
         if (!directory.exists() || !directory.isDirectory()) {
-            System.err.println("Директория " + directoryPath + " не существует или не является директорией.");
-            return contacts;
+            System.err.println("Директория " + DIRECTORY_PATH + " не существует или не является директорией.");
+            return CONTACTS;
         }
+        readFiles(directory.listFiles());
+        return CONTACTS;
+    }
 
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile()) {
-                    try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-                        StringBuilder fileContent = new StringBuilder();
-                        String line;
-                        while ((line = bufferedReader.readLine()) != null) {
-                            fileContent.append(line).append(System.lineSeparator());
-                        }
+    private static void readFiles(File[] files) {
+        for (File file : files) {
+            if (file.isFile()) {
+                try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
+                    StringBuilder fileContent = new StringBuilder();
+                    String line;
 
-                        Contact contact = ContactParser.parseContact(fileContent.toString());
-                        if (contact != null) {
-                            String key = contact.getLastName() + "_" + contact.getFirstName();
-                            contacts.put(key, contact);
-                        }
-                    } catch (IOException e) {
-                        System.err.println("Произошла ошибка при чтении файла: " + file.getName() + " - " + e.getMessage());
+                    while ((line = bufferedReader.readLine()) != null) {
+                        fileContent.append(line).append(System.lineSeparator());
                     }
+
+                    Contact contact = ContactParser.parseContact(fileContent.toString());
+                    String key = contact.getLastName() + "_" + contact.getFirstName();
+                    CONTACTS.put(key, contact);
+                } catch (IOException e) {
+                    System.err.println("Произошла ошибка при чтении файла: " + file.getName() + " - " + e.getMessage());
                 }
             }
         }
-
-        return contacts;
     }
 }
