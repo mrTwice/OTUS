@@ -1,0 +1,63 @@
+2024-06-09 11:23:01 INFO  ru.otus.basic.yampolskiy.ChatServer - Сервер запущен на порту: 9090
+2024-06-09 11:23:11 INFO  ru.otus.basic.yampolskiy.ChatServer - Запрос подключения с адреса /127.0.0.1:52014
+2024-06-09 11:23:11 INFO  ru.otus.basic.yampolskiy.ClientHandler - Клиент /127.0.0.1:52014 перехвачен обработчиком
+2024-06-09 11:23:11 ERROR ru.otus.basic.yampolskiy.ClientHandler - Произошла ошибка ввода вывода
+java.io.EOFException: null
+	at java.io.DataInputStream.readFully(DataInputStream.java:210) ~[?:?]
+	at java.io.DataInputStream.readUnsignedShort(DataInputStream.java:341) ~[?:?]
+	at java.io.DataInputStream.readUTF(DataInputStream.java:575) ~[?:?]
+	at java.io.DataInputStream.readUTF(DataInputStream.java:550) ~[?:?]
+	at ru.otus.basic.yampolskiy.ClientHandler.run(ClientHandler.java:24) [classes/:?]
+2024-06-09 11:23:11 INFO  ru.otus.basic.yampolskiy.ClientHandler - Сокет клиента закрыт
+2024-06-09 11:25:18 INFO  ru.otus.basic.yampolskiy.ChatServer - Запрос подключения с адреса /127.0.0.1:52023
+2024-06-09 11:25:18 INFO  ru.otus.basic.yampolskiy.ClientHandler - Клиент /127.0.0.1:52023 перехвачен обработчиком
+2024-06-09 11:25:18 ERROR ru.otus.basic.yampolskiy.ClientHandler - Произошла ошибка ввода вывода
+java.io.EOFException: null
+	at java.io.DataInputStream.readFully(DataInputStream.java:210) ~[?:?]
+	at java.io.DataInputStream.readUnsignedShort(DataInputStream.java:341) ~[?:?]
+	at java.io.DataInputStream.readUTF(DataInputStream.java:575) ~[?:?]
+	at java.io.DataInputStream.readUTF(DataInputStream.java:550) ~[?:?]
+	at ru.otus.basic.yampolskiy.ClientHandler.run(ClientHandler.java:24) [classes/:?]
+2024-06-09 11:25:18 INFO  ru.otus.basic.yampolskiy.ClientHandler - Сокет клиента закрыт
+2024-06-09 11:29:35 INFO  ru.otus.basic.yampolskiy.ChatServer - Сервер запущен на порту: 9090
+2024-06-09 11:29:41 INFO  ru.otus.basic.yampolskiy.ChatServer - Запрос подключения с адреса /127.0.0.1:52038
+2024-06-09 11:29:41 INFO  ru.otus.basic.yampolskiy.ClientHandler - Клиент /127.0.0.1:52038 перехвачен обработчиком
+2024-06-09 11:31:22 ERROR ru.otus.basic.yampolskiy.ClientHandler - Произошла ошибка ввода вывода
+java.io.EOFException: null
+	at java.io.DataInputStream.readFully(DataInputStream.java:210) ~[?:?]
+	at java.io.DataInputStream.readUTF(DataInputStream.java:594) ~[?:?]
+	at java.io.DataInputStream.readUTF(DataInputStream.java:550) ~[?:?]
+	at ru.otus.basic.yampolskiy.ClientHandler.run(ClientHandler.java:24) [classes/:?]
+2024-06-09 11:31:22 INFO  ru.otus.basic.yampolskiy.ClientHandler - Сокет клиента закрыт
+2024-06-09 11:31:25 INFO  ru.otus.basic.yampolskiy.ChatServer - Запрос подключения с адреса /127.0.0.1:52044
+2024-06-09 11:31:25 INFO  ru.otus.basic.yampolskiy.ClientHandler - Клиент /127.0.0.1:52044 перехвачен обработчиком
+2024-06-09 11:31:43 INFO  ru.otus.basic.yampolskiy.ClientHandler - Получено входящее сообщение: ПРИВЕТ
+
+2024-06-09 11:31:43 INFO  ru.otus.basic.yampolskiy.ClientHandler - Сокет клиента закрыт
+2024-06-09 11:35:00 INFO  ru.otus.basic.yampolskiy.ChatServer - Запрос подключения с адреса /127.0.0.1:52059
+2024-06-09 11:35:00 INFO  ru.otus.basic.yampolskiy.ClientHandler - Клиент /127.0.0.1:52059 перехвачен обработчиком
+2024-06-09 11:35:03 INFO  ru.otus.basic.yampolskiy.ClientHandler - Получено входящее сообщение: ПРИВЕТ
+
+2024-06-09 11:35:03 INFO  ru.otus.basic.yampolskiy.ClientHandler - Сокет клиента закрыт
+2024-06-09 11:38:11 INFO  ru.otus.basic.yampolskiy.ChatServer - Запрос подключения с адреса /127.0.0.1:52069
+2024-06-09 11:38:11 INFO  ru.otus.basic.yampolskiy.ClientHandler - Клиент /127.0.0.1:52069 перехвачен обработчиком
+2024-06-09 11:38:11 ERROR ru.otus.basic.yampolskiy.ClientHandler - Произошла ошибка ввода вывода
+java.io.EOFException: null
+	at java.io.DataInputStream.readFully(DataInputStream.java:210) ~[?:?]
+	at java.io.DataInputStream.readUnsignedShort(DataInputStream.java:341) ~[?:?]
+	at java.io.DataInputStream.readUTF(DataInputStream.java:575) ~[?:?]
+	at java.io.DataInputStream.readUTF(DataInputStream.java:550) ~[?:?]
+	at ru.otus.basic.yampolskiy.ClientHandler.run(ClientHandler.java:24) [classes/:?]
+2024-06-09 11:38:11 INFO  ru.otus.basic.yampolskiy.ClientHandler - Сокет клиента закрыт
+2024-06-09 11:38:33 INFO  ru.otus.basic.yampolskiy.ChatServer - Запрос подключения с адреса /127.0.0.1:52077
+2024-06-09 11:38:33 INFO  ru.otus.basic.yampolskiy.ClientHandler - Клиент /127.0.0.1:52077 перехвачен обработчиком
+2024-06-09 11:38:33 ERROR ru.otus.basic.yampolskiy.ClientHandler - Произошла ошибка ввода вывода
+java.io.EOFException: null
+	at java.io.DataInputStream.readFully(DataInputStream.java:210) ~[?:?]
+	at java.io.DataInputStream.readUnsignedShort(DataInputStream.java:341) ~[?:?]
+	at java.io.DataInputStream.readUTF(DataInputStream.java:575) ~[?:?]
+	at java.io.DataInputStream.readUTF(DataInputStream.java:550) ~[?:?]
+	at ru.otus.basic.yampolskiy.ClientHandler.run(ClientHandler.java:24) [classes/:?]
+2024-06-09 11:38:33 INFO  ru.otus.basic.yampolskiy.ClientHandler - Сокет клиента закрыт
+2024-06-09 11:40:16 INFO  ru.otus.basic.yampolskiy.ChatServer - Запрос подключения с адреса /127.0.0.1:52086
+2024-06-09 11:40:16 INFO  ru.otus.basic.yampolskiy.ClientHandler - Клиент /127.0.0.1:52086 перехвачен обработчиком

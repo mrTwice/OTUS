@@ -1,0 +1,52 @@
+2024-06-09 11:23:11 INFO  ru.otus.basic.yampolskiy.ChatClient - Установлено соединение с сервером /127.0.0.1:9090
+2024-06-09 11:23:11 INFO  ru.otus.basic.yampolskiy.InputThread - Получен входящий поток
+2024-06-09 11:23:11 INFO  ru.otus.basic.yampolskiy.InputThread - Поток для чтения данных запущен
+2024-06-09 11:23:11 ERROR ru.otus.basic.yampolskiy.InputThread - Критическая ошибка
+2024-06-09 11:23:11 INFO  ru.otus.basic.yampolskiy.InputThread - Сокет был закрыт
+2024-06-09 11:23:11 INFO  ru.otus.basic.yampolskiy.InputThread - Сокет закрыт в потоке чтения данных
+2024-06-09 11:23:11 FATAL ru.otus.basic.yampolskiy.InputThread - Throwing
+java.net.SocketException: Socket is closed
+	at java.net.Socket.getOutputStream(Socket.java:1175) ~[?:?]
+	at ru.otus.basic.yampolskiy.OutputThread.run(OutputThread.java:25) [classes/:?]
+2024-06-09 11:25:18 INFO  ru.otus.basic.yampolskiy.ChatClient - Установлено соединение с сервером /127.0.0.1:9090
+2024-06-09 11:25:18 INFO  ru.otus.basic.yampolskiy.InputThread - Получен входящий поток
+2024-06-09 11:25:18 INFO  ru.otus.basic.yampolskiy.InputThread - Поток для чтения данных запущен
+2024-06-09 11:25:18 INFO  ru.otus.basic.yampolskiy.InputThread - Сокет был закрыт
+2024-06-09 11:25:18 INFO  ru.otus.basic.yampolskiy.InputThread - Сокет закрыт в потоке чтения данных
+2024-06-09 11:25:18 INFO  ru.otus.basic.yampolskiy.OutputThread - Сокет был закрыт
+2024-06-09 11:25:18 INFO  ru.otus.basic.yampolskiy.OutputThread - Сокет закрыт в потоке записи данных
+2024-06-09 11:29:41 INFO  ru.otus.basic.yampolskiy.ChatClient - Установлено соединение с сервером /127.0.0.1:9090
+2024-06-09 11:29:41 INFO  ru.otus.basic.yampolskiy.InputThread - Получен входящий поток
+2024-06-09 11:29:41 INFO  ru.otus.basic.yampolskiy.InputThread - Поток для чтения данных запущен
+2024-06-09 11:29:41 INFO  ru.otus.basic.yampolskiy.OutputThread - Поток для записи данных запущен
+2024-06-09 11:30:01 INFO  ru.otus.basic.yampolskiy.OutputThread - Отправлено сообщение: ПРИВЕТП
+2024-06-09 11:31:25 INFO  ru.otus.basic.yampolskiy.ChatClient - Установлено соединение с сервером /127.0.0.1:9090
+2024-06-09 11:31:25 INFO  ru.otus.basic.yampolskiy.InputThread - Получен входящий поток
+2024-06-09 11:31:25 INFO  ru.otus.basic.yampolskiy.InputThread - Поток для чтения данных запущен
+2024-06-09 11:31:25 INFO  ru.otus.basic.yampolskiy.OutputThread - Поток для записи данных запущен
+2024-06-09 11:31:43 INFO  ru.otus.basic.yampolskiy.OutputThread - Отправлено сообщение: ПРИВЕТ
+2024-06-09 11:31:43 INFO  ru.otus.basic.yampolskiy.InputThread - Получено сообщение: привет
+
+2024-06-09 11:35:00 INFO  ru.otus.basic.yampolskiy.ChatClient - Установлено соединение с сервером /127.0.0.1:9090
+2024-06-09 11:35:00 INFO  ru.otus.basic.yampolskiy.InputThread - Получен входящий поток
+2024-06-09 11:35:00 INFO  ru.otus.basic.yampolskiy.OutputThread - Получен исходящий поток
+2024-06-09 11:35:00 INFO  ru.otus.basic.yampolskiy.InputThread - Поток для чтения данных запущен
+2024-06-09 11:35:00 INFO  ru.otus.basic.yampolskiy.OutputThread - Поток для записи данных запущен
+2024-06-09 11:35:03 INFO  ru.otus.basic.yampolskiy.OutputThread - Отправлено сообщение: ПРИВЕТ
+2024-06-09 11:35:03 INFO  ru.otus.basic.yampolskiy.InputThread - Получено сообщение: привет
+
+2024-06-09 11:38:11 INFO  ru.otus.basic.yampolskiy.ChatClient - Установлено соединение с сервером /127.0.0.1:9090
+2024-06-09 11:38:11 INFO  ru.otus.basic.yampolskiy.InputThread - Получен входящий поток
+2024-06-09 11:38:11 INFO  ru.otus.basic.yampolskiy.OutputThread - Получен исходящий поток
+2024-06-09 11:38:33 INFO  ru.otus.basic.yampolskiy.ChatClient - Установлено соединение с сервером /127.0.0.1:9090
+2024-06-09 11:38:33 INFO  ru.otus.basic.yampolskiy.InputThread - Получен входящий поток
+2024-06-09 11:38:33 INFO  ru.otus.basic.yampolskiy.InputThread - Поток для чтения данных запущен
+2024-06-09 11:38:33 INFO  ru.otus.basic.yampolskiy.OutputThread - Получен исходящий поток
+2024-06-09 11:38:33 INFO  ru.otus.basic.yampolskiy.InputThread - Сокет закрыт в потоке чтения данных
+2024-06-09 11:38:33 INFO  ru.otus.basic.yampolskiy.OutputThread - Поток для записи данных запущен
+2024-06-09 11:38:33 INFO  ru.otus.basic.yampolskiy.OutputThread - Сокет закрыт в потоке записи данных
+2024-06-09 11:40:16 INFO  ru.otus.basic.yampolskiy.ChatClient - Установлено соединение с сервером /127.0.0.1:9090
+2024-06-09 11:40:16 INFO  ru.otus.basic.yampolskiy.InputThread - Получен входящий поток
+2024-06-09 11:40:16 INFO  ru.otus.basic.yampolskiy.OutputThread - Получен исходящий поток
+2024-06-09 11:40:16 INFO  ru.otus.basic.yampolskiy.InputThread - Поток для чтения данных запущен
+2024-06-09 11:40:16 INFO  ru.otus.basic.yampolskiy.OutputThread - Поток для записи данных запущен
