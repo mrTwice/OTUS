@@ -1,7 +1,12 @@
 package ru.otus.basic.yampolskiy.protocol;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.time.LocalDateTime;
 
+@JsonSerialize
+@JsonDeserialize
 public class Message<T> {
     private String messageId;
     private String sender;
@@ -9,6 +14,18 @@ public class Message<T> {
     private String message;
     private T payload;
     private LocalDateTime timestamp;
+
+    public Message() {
+    }
+
+    public Message(String messageId, String sender, String receiver, String message, T payload, LocalDateTime timestamp) {
+        this.messageId = messageId;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.message = message;
+        this.payload = payload;
+        this.timestamp = timestamp;
+    }
 
     public String getSender() {
         return sender;

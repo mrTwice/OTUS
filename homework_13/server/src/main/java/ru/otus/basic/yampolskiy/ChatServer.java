@@ -16,20 +16,20 @@ import java.util.concurrent.*;
 public class ChatServer {
     private final static int PORT = 9090;
     private static final Logger logger = LogManager.getLogger(ChatServer.class);
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(10);
     private static final BlockingQueue<Socket> newConnections = new LinkedBlockingQueue<>();
-    private static final BlockingQueue<Socket> registration = new LinkedBlockingQueue<>();
-    private static final BlockingQueue<Socket> authentication = new LinkedBlockingQueue<>();
-    private static final BlockingQueue<Client> messages = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<Client<?>> registration = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<Client<?>> authentication = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<Client<?>> messages = new LinkedBlockingQueue<>();
 
     public static void main(String[] args) {
         try (ServerSocket chatServer = new ServerSocket(PORT)) {
             logger.info("Сервер запущен на порту: {}", PORT);
 
-            executorService.submit(new ConnectionHandler(newConnections, registration, authentication));
-            executorService.submit(new RegistrationHandler(registration, authentication));
-            executorService.submit(new AuthenticationHandler(authentication, messages));
-            executorService.submit(new MessageHandler(messages));
+            executorService.scheduleWithFixedDelay(new ConnectionHandler(newConnections, registration, authentication), 0, 500, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new RegistrationHandler(registration, authentication), 0, 500, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new AuthenticationHandler(authentication, messages), 0, 500, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new MessageHandler(messages), 0, 100, TimeUnit.MILLISECONDS);
 
             while (true) {
                 Socket newClient = chatServer.accept();
@@ -38,6 +38,25 @@ public class ChatServer {
             }
         } catch (Exception e) {
             logger.error("Критическая ошибка", e);
+        } finally {
+            shutdownExecutorService();
         }
+    }
+
+    private static void shutdownExecutorService() {
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+                executorService.shutdownNow();
+                if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+                    logger.error("ExecutorService не завершился");
+                }
+            }
+        } catch (InterruptedException ex) {
+            logger.error("Ожидание завершения ExecutorService было прервано", ex);
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+        logger.info("Сервер завершил работу");
     }
 }

@@ -37,5 +37,14 @@ public class UserRegistrationDTO {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public String toString() {
+        return "UserRegistrationDTO{" +
+                "nickname='" + nickname + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
 

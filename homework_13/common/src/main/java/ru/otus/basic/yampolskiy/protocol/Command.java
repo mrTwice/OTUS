@@ -1,5 +1,10 @@
 package ru.otus.basic.yampolskiy.protocol;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@JsonSerialize
+@JsonDeserialize
 public enum Command {
     REGISTER("REGISTER"),
     LOGIN("LOGIN"),

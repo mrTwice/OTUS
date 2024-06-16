@@ -10,12 +10,12 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 
 public class AuthenticationHandler implements Runnable, Handler {
-    private final BlockingQueue<Socket> authenticationQueue;
-    private final BlockingQueue<Client> messagesQueue;
+    private final BlockingQueue<Client<?>> authenticationQueue;
+    private final BlockingQueue<Client<?>> messagesQueue;
     private static final Logger logger = LogManager.getLogger(AuthenticationHandler.class);
     private final UserService userService;
 
-    public AuthenticationHandler(BlockingQueue<Socket> authenticationQueue, BlockingQueue<Client> messagesQueue) {
+    public AuthenticationHandler(BlockingQueue<Client<?>> authenticationQueue, BlockingQueue<Client<?>> messagesQueue) {
         this.authenticationQueue = authenticationQueue;
         this.messagesQueue = messagesQueue;
         this.userService = UserServiceImpl.getUserService();
@@ -24,7 +24,8 @@ public class AuthenticationHandler implements Runnable, Handler {
     @Override
     public void run() {
         while (true) {
-            try(Socket client = authenticationQueue.take();) {
+            Client<?> client = authenticationQueue.poll();
+            try {
                 //TODO: логика обработки авторизации
             } catch (Exception e) {
                 logger.error("Ошибка при обработке запроса авторизации", e);

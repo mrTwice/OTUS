@@ -1,10 +1,18 @@
 package ru.otus.basic.yampolskiy.protocol;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@JsonSerialize
+@JsonDeserialize
 public class Parcel<T> {
     private Command command;
-    private Payload<T> payload;
+    private T payload;
 
-    public Parcel(Command command, Payload<T> payload) {
+    public Parcel() {
+    }
+
+    public Parcel(Command command, T payload) {
         this.command = command;
         this.payload = payload;
     }
@@ -17,11 +25,11 @@ public class Parcel<T> {
         this.command = command;
     }
 
-    public Payload<T> getPayload() {
+    public T getPayload() {
         return payload;
     }
 
-    public void setPayload(Payload<T> payload) {
+    public void setPayload(T payload) {
         this.payload = payload;
     }
 

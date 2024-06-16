@@ -7,10 +7,10 @@ import ru.otus.basic.yampolskiy.entities.Client;
 import java.util.concurrent.BlockingQueue;
 
 public class MessageHandler implements Runnable, Handler {
-    private final BlockingQueue<Client> messageQueue;
+    private final BlockingQueue<Client<?>> messageQueue;
     private static final Logger logger = LogManager.getLogger(MessageHandler.class);
 
-    public MessageHandler(BlockingQueue<Client> messageQueue) {
+    public MessageHandler(BlockingQueue<Client<?>> messageQueue) {
         this.messageQueue = messageQueue;
     }
 
@@ -18,7 +18,7 @@ public class MessageHandler implements Runnable, Handler {
     public void run() {
         while (true)
             try {
-                Client client = messageQueue.take();
+                Client<?> client = messageQueue.take();
                 //TODO: логика обработки пересылаемых сообщений
             } catch (Exception e) {
                 logger.error("Ошибка при обработке сообщения", e);

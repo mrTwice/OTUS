@@ -1,9 +1,11 @@
 package ru.otus.basic.yampolskiy.utils;
 
-public class ObjectMapper {
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class ObjectMapperSingleton {
     private static final ObjectMapper INSTANCE = new ObjectMapper();
 
-    private ObjectMapper( ){}
+    private ObjectMapperSingleton( ){}
 
     public static ObjectMapper getINSTANCE() {
         return INSTANCE;

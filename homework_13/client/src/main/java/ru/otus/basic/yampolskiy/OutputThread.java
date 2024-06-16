@@ -1,19 +1,27 @@
 package ru.otus.basic.yampolskiy;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.otus.basic.yampolskiy.protocol.Parcel;
+import ru.otus.basic.yampolskiy.utils.ObjectMapperSingleton;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
 
 public class OutputThread extends Thread {
+    private final ObjectMapper objectMapper = ObjectMapperSingleton.getINSTANCE();
     private static final Logger logger = LogManager.getLogger(OutputThread.class);
+    private final BlockingQueue<Parcel<?>> parcels;
     private final Socket socket;
     private DataOutputStream out;
 
-    public OutputThread(Socket socket) {
+    public OutputThread(Socket socket, BlockingQueue<Parcel<?>> parcels) {
         this.socket = socket;
+        this.parcels = parcels;
         try {
             out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             logger.info("Получен исходящий поток");
@@ -24,16 +32,15 @@ public class OutputThread extends Thread {
 
     @Override
     public void run() {
-        try (Scanner input = new Scanner(System.in)) {
-
-            logger.info("Поток для записи данных запущен");
-
+        logger.info("Поток для записи данных запущен");
+        try {
             while (!socket.isClosed()) {
-                if (input.hasNextLine()) {
-                    String string = input.nextLine();
-                    out.writeUTF(string + "\n");
+                Parcel<?> parcel = parcels.poll();
+                if(parcel != null){
+                    String json = objectMapper.writeValueAsString(parcel);
+                    out.writeUTF(json);
                     out.flush();
-                    logger.info("Отправлено сообщение: {}", string);
+                    logger.info("Отправлено сообщение: {}", json);
                 }
             }
         } catch (IOException e) {
