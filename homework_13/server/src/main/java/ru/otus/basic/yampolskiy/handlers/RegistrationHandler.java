@@ -30,7 +30,7 @@ public class RegistrationHandler implements Runnable, Handler {
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            Client<?> client;
+            Client<?> client = null;
             try {
                 client = registrationQueue.poll(1, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
