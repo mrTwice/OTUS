@@ -3,6 +3,7 @@ package ru.otus.basic.yampolskiy.entities;
 import java.net.Socket;
 
 public class Client<T> {
+    private int timeoutCount;
     private final Socket socket;
     private User user;
     private T cachedData;
@@ -29,5 +30,13 @@ public class Client<T> {
 
     public void setCachedData(T cachedData) {
         this.cachedData = cachedData;
+    }
+
+    public int getTimeoutCount() {
+        return timeoutCount;
+    }
+
+    public void incrementTimeoutCount() {
+        timeoutCount++;
     }
 }
