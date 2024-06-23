@@ -7,7 +7,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonDeserialize
 public enum Command {
     REGISTER("REGISTER"),
+    REGISTER_COMPLETE("REGISTER_COMPLETE"),
     LOGIN("LOGIN"),
+    LOGIN_COMPLETE("LOGIN_COMPLETE"),
     REQUEST_PUBLIC_KEY("REQUEST_PUBLIC_KEY"),
     SEND_PUBLIC_KEY("SEND_PUBLIC_KEY"),
     SEND_SYMMETRIC_KEY("SEND_SYMMETRIC_KEY"),

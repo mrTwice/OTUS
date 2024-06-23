@@ -18,15 +18,16 @@ import java.util.concurrent.TimeUnit;
 
 public class ConnectionHandler implements Runnable, Handler {
     private final int ATTEMPT = 5;
+    private final long TIMEOUT = 10000;
     private final BlockingQueue<Client<?>> connections;
-    private final BlockingQueue<Client<?>> registration;
-    private final BlockingQueue<Client<?>> authentication;
+    private final BlockingQueue<Client<UserRegistrationDTO>> registration;
+    private final BlockingQueue<Client<UserLoginDTO>> authentication;
     private static final Logger logger = LogManager.getLogger(ConnectionHandler.class);
     private static final ObjectMapper objectMapper = ObjectMapperSingleton.getINSTANCE();
 
     public ConnectionHandler(BlockingQueue<Client<?>> connections,
-                             BlockingQueue<Client<?>> registration,
-                             BlockingQueue<Client<?>> authentication) {
+                             BlockingQueue<Client<UserRegistrationDTO>> registration,
+                             BlockingQueue<Client<UserLoginDTO>> authentication) {
         this.connections = connections;
         this.registration = registration;
         this.authentication = authentication;
@@ -54,7 +55,7 @@ public class ConnectionHandler implements Runnable, Handler {
     private void processConnection(Client<?> client) throws IOException, InterruptedException {
         if(client.getTimeoutCount() > ATTEMPT) {
             logger.info("Превышено количество попыток ожидания ответа от клиента: {}", client.getTimeoutCount());
-            closeResources(client.getSocket().getInputStream(), client.getSocket().getOutputStream(), client.getSocket());
+            client.getServer().closeResources(client.getSocket().getInputStream(), client.getSocket().getOutputStream(), client.getSocket());
             return;
         }
         Socket socket = client.getSocket();
@@ -73,10 +74,9 @@ public class ConnectionHandler implements Runnable, Handler {
             logger.info("Отправлено приветствие клиенту: {}", socket.getRemoteSocketAddress());
 
             long startTime = System.currentTimeMillis();
-            long timeout = 10000; // Тайм-аут 10 секунд
 
             // Ожидаем ответ от клиента
-            while (System.currentTimeMillis() - startTime < timeout) {
+            while (System.currentTimeMillis() - startTime < TIMEOUT) {
                 if (in.available() > 0) {
                     String responseJson = in.readUTF();
                     logger.info("Получен ответ от клиента: {}", responseJson);
@@ -88,7 +88,7 @@ public class ConnectionHandler implements Runnable, Handler {
                 }
             }
 
-            if (System.currentTimeMillis() - startTime >= timeout) {
+            if (System.currentTimeMillis() - startTime >= TIMEOUT) {
                 logger.warn("Тайм-аут ожидания ответа от клиента: {}", socket.getRemoteSocketAddress());
                 client.incrementTimeoutCount();
                 connections.put(client);
@@ -143,31 +143,5 @@ public class ConnectionHandler implements Runnable, Handler {
             return null;
         }
     }
-
-    private void closeResources(InputStream in, OutputStream out, Socket socket) {
-        if (in != null) {
-            try {
-                in.close();
-            } catch (IOException e) {
-                logger.error("Ошибка при закрытии DataInputStream", e);
-            }
-        }
-        if (out != null) {
-            try {
-                out.close();
-            } catch (IOException e) {
-                logger.error("Ошибка при закрытии DataOutputStream", e);
-            }
-        }
-        if (socket != null && !socket.isClosed()) {
-            try {
-                socket.close();
-                logger.info("Сокет клиента закрыт: {}", socket.getRemoteSocketAddress());
-            } catch (IOException e) {
-                logger.error("Ошибка при закрытии сокета", e);
-            }
-        }
-    }
-
 }
 
