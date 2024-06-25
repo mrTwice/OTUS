@@ -7,23 +7,19 @@ import java.time.LocalDateTime;
 
 @JsonSerialize
 @JsonDeserialize
-public class Message<T> {
+public class Message {
     private String messageId;
     private String sender;
-    private String receiver;
     private String message;
-    private T payload;
     private LocalDateTime timestamp;
 
     public Message() {
     }
 
-    public Message(String messageId, String sender, String receiver, String message, T payload, LocalDateTime timestamp) {
+    public Message(String messageId, String sender, String message, LocalDateTime timestamp) {
         this.messageId = messageId;
         this.sender = sender;
-        this.receiver = receiver;
         this.message = message;
-        this.payload = payload;
         this.timestamp = timestamp;
     }
 
@@ -35,28 +31,12 @@ public class Message<T> {
         this.sender = sender;
     }
 
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
-
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public T getPayload() {
-        return payload;
-    }
-
-    public void setPayload(T payload) {
-        this.payload = payload;
     }
 
     public String getMessageId() {
@@ -78,7 +58,6 @@ public class Message<T> {
     @Override
     public String toString() {
         return "Message{" +
-                "payload=" + payload +
                 ", messageId='" + messageId + '\'' +
                 ", timestamp=" + timestamp +
                 '}';
