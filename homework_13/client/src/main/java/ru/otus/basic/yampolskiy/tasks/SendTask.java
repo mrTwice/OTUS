@@ -43,5 +43,6 @@ public class SendTask implements Runnable {
                 logger.error("Критическая ошибка", e);
             }
         }
+        logger.info("Задача отработала");
     }
 }

@@ -7,13 +7,13 @@ public class User {
     private UUID id;
     private String nickname;
     private String email;
-    private String phoneNumber;
+    private String password;
 
-    public User(UUID id, String nickname, String email, String phoneNumber) {
+    public User(UUID id, String nickname, String email, String password) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
-        this.phoneNumber = phoneNumber;
+        this.password = password;
     }
 
     public String getId() {
@@ -40,12 +40,12 @@ public class User {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
@@ -53,11 +53,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(phoneNumber, user.phoneNumber);
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, phoneNumber);
+        return Objects.hash(id, email, password);
     }
 }

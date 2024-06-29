@@ -21,5 +21,24 @@ public class CommonController {
         new Thread(new CommonTask(this, incoming, messages)).start();
     }
 
+    public void setNickname(String nickname){
+        model.setNickname(nickname);
+    }
+
+    public void setRegisteredStatus(boolean status) {
+        model.setRegistrationStatus(status);
+    }
+
+    public void setLoginStatus(boolean status) {
+        model.setLoginStatus(status);
+    }
+
+    public boolean isRegistered() {
+        return model.isRegistered();
+    }
+
+    public boolean isLogined() {
+        return model.isLoggined();
+    }
 
 }

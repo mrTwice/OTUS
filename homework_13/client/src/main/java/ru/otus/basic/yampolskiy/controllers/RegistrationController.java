@@ -20,14 +20,18 @@ public class RegistrationController {
     }
 
     public boolean registration(UserRegistrationDTO newUser) {
-        Parcel<UserRegistrationDTO> userRegistrationDTOParcel = new Parcel<>(Command.REGISTER, newUser);
-        try {
-            String data = objectMapper.writeValueAsString(userRegistrationDTOParcel);
-            model.send(data);
-            return true;
-        } catch (JsonProcessingException e) {
-            logger.error("Ошибка сериализации объекта в процессе регистрации");
-            return false;
+        if(!model.isRegistered()) {
+            Parcel<UserRegistrationDTO> userRegistrationDTOParcel = new Parcel<>(Command.REGISTER, newUser);
+            try {
+                String data = objectMapper.writeValueAsString(userRegistrationDTOParcel);
+                model.send(data);
+                logger.info("Данные для регистрации отправлены: {}", data);
+                return true;
+            } catch (JsonProcessingException e) {
+                logger.error("Ошибка сериализации объекта в процессе регистрации");
+                return false;
+            }
         }
+        return false;
     }
 }

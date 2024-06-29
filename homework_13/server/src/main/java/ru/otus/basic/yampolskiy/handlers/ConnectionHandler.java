@@ -54,9 +54,9 @@ public class ConnectionHandler implements Runnable, Handler {
     private void processConnection(Socket socket) throws IOException, InterruptedException {
         logger.info("Принято новое подключение от: {}", socket.getRemoteSocketAddress());
 
-        try (DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-             DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()))) {
-
+        try {
+            DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             // Отправляем команду IDENTIFICATION клиенту
             Parcel<String> greetings = new Parcel<>(Command.IDENTIFICATION, "Добро пожаловать! Вы подключились к чат-серверу.");
             out.writeUTF(objectMapper.writeValueAsString(greetings));
@@ -64,7 +64,7 @@ public class ConnectionHandler implements Runnable, Handler {
             logger.info("Отправлено приветствие клиенту: {}", socket.getRemoteSocketAddress());
 
             long startTime = System.currentTimeMillis();
-            long timeout = 10000; // Тайм-аут 10 секунд
+            long timeout = 1000000; // Тайм-аут 10 секунд
 
             // Ожидаем ответ от клиента
             while (System.currentTimeMillis() - startTime < timeout) {
@@ -85,29 +85,32 @@ public class ConnectionHandler implements Runnable, Handler {
                 logger.warn("Тайм-аут ожидания ответа от клиента: {}", socket.getRemoteSocketAddress());
                 newConnections.put(socket);
             }
+        } catch (IOException | InterruptedException e) {
+            logger.error("Ошибка обработки клиент в очереди newConnections ");
         }
     }
 
     private void processCommandFromClient(Command command, String responseJson, Socket socket) throws InterruptedException {
-        try {
+  //      try {
             if (command.equals(Command.REGISTER)) {
                 // Десериализация JSON в UserRegistrationDTO
-                Parcel<UserRegistrationDTO> registrationParcel = objectMapper.readValue(responseJson, new TypeReference<Parcel<UserRegistrationDTO>>() {});
-                Client<UserRegistrationDTO> client = new Client<>(socket);
-                client.setCachedData(registrationParcel.getPayload());
+                //Parcel<UserRegistrationDTO> registrationParcel = objectMapper.readValue(responseJson, new TypeReference<Parcel<UserRegistrationDTO>>() {});
+                Client<?> client = new Client<>(socket);
+                //client.setCachedData(registrationParcel.getPayload());
                 registration.put(client);
                 logger.info("Клиент добавлен в очередь регистрации: {}", socket.getRemoteSocketAddress());
             } else if (command.equals(Command.LOGIN)) {
                 // Десериализация JSON в UserLoginDTO
-                Parcel<UserLoginDTO> loginParcel = objectMapper.readValue(responseJson, new TypeReference<Parcel<UserLoginDTO>>() {});
-                Client<UserLoginDTO> client = new Client<>(socket);
-                client.setCachedData(loginParcel.getPayload());
+                //Parcel<UserLoginDTO> loginParcel = objectMapper.readValue(responseJson, new TypeReference<Parcel<UserLoginDTO>>() {});
+                Client<?> client = new Client<>(socket);
+                //client.setCachedData(loginParcel.getPayload());
                 authentication.put(client);
                 logger.info("Клиент добавлен в очередь аутентификации: {}", socket.getRemoteSocketAddress());
             }
-        } catch (IOException e) {
-            logger.error("Ошибка десериализации ответа клиента: {}", socket.getRemoteSocketAddress(), e);
-        }
+       // }
+        // catch (IOException e) {
+            //logger.error("Ошибка десериализации ответа клиента: {}", socket.getRemoteSocketAddress(), e);
+        //}
     }
 
 }
