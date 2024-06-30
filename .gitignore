@@ -3,5 +3,4 @@
 */target
 target/
 */*.txt
-logs/
-*/*.log
+*.log
