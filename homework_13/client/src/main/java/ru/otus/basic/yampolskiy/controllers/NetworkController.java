@@ -32,6 +32,8 @@ public class NetworkController {
             new Thread(new ReceiveTask(this, socket, incoming)).start();
             new Thread(new SendTask(this,socket, outcoming)).start();
 
+
+
         } catch (Exception e) {
             logger.error("Критическая ошибка");
             logger.throwing(Level.FATAL, e);

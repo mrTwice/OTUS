@@ -58,8 +58,9 @@ public class Presenter {
                         String password = view.getInput("Введите пароль: ");
                         UserRegistrationDTO newUser = new UserRegistrationDTO(newNickname, email, password);
                         model.sendRegisterRequest(newUser);
+                    } else {
+                        view.printMessage("Вы уже зарегистрированы.");
                     }
-                    view.printMessage("Вы уже зарегистрированы.");
                 }
                 case 2 -> {
                     if(!isLogined) {
@@ -67,6 +68,8 @@ public class Presenter {
                         String password = view.getInput("Введите пароль: ");
                         UserLoginDTO userLoginDTO = new UserLoginDTO(email, password);
                         model.sendLoginRequest(userLoginDTO);
+                    }else {
+                        view.printMessage("Вы уже авторизованы.");
                     }
                 }
                 case 3 -> {

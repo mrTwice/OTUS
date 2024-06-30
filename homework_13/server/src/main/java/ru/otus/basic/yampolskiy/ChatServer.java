@@ -3,13 +3,14 @@ package ru.otus.basic.yampolskiy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.otus.basic.yampolskiy.entities.Client;
-import ru.otus.basic.yampolskiy.handlers.AuthenticationHandler;
-import ru.otus.basic.yampolskiy.handlers.ConnectionHandler;
-import ru.otus.basic.yampolskiy.handlers.MessageHandler;
-import ru.otus.basic.yampolskiy.handlers.RegistrationHandler;
+import ru.otus.basic.yampolskiy.handlers.*;
+import ru.otus.basic.yampolskiy.handlers.AuthenticationTask;
+import ru.otus.basic.yampolskiy.handlers.RegistrationTask;
+import ru.otus.basic.yampolskiy.protocol.Message;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.concurrent.*;
 
 
@@ -17,24 +18,27 @@ public class ChatServer {
     private final static int PORT = 9090;
     private static final Logger logger = LogManager.getLogger(ChatServer.class);
     private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(10);
-    private static final BlockingQueue<Socket> newConnections = new LinkedBlockingQueue<>();
-    private static final BlockingQueue<Client<?>> registration = new LinkedBlockingQueue<>();
-    private static final BlockingQueue<Client<?>> authentication = new LinkedBlockingQueue<>();
-    private static final BlockingQueue<Client<?>> messages = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<Client> newClients = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<Client> registration = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<Client> authentication = new LinkedBlockingQueue<>();
+    private static final List<Client> authorizedClients = new CopyOnWriteArrayList<>();
+    private static final BlockingQueue<Message> messages = new LinkedBlockingQueue<>();
 
     public static void main(String[] args) {
         try (ServerSocket chatServer = new ServerSocket(PORT)) {
             logger.info("Сервер запущен на порту: {}", PORT);
 
-            executorService.scheduleWithFixedDelay(new ConnectionHandler(newConnections, registration, authentication), 0, 500, TimeUnit.MILLISECONDS);
-            executorService.scheduleWithFixedDelay(new RegistrationHandler(registration, authentication), 0, 500, TimeUnit.MILLISECONDS);
-            executorService.scheduleWithFixedDelay(new AuthenticationHandler(authentication, messages), 0, 500, TimeUnit.MILLISECONDS);
-            executorService.scheduleWithFixedDelay(new MessageHandler(messages), 0, 100, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new ConnectionTask(newClients, registration, authentication), 0, 500, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new RegistrationTask(newClients, registration), 0, 500, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new AuthenticationTask(newClients, authentication, authorizedClients), 0, 500, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new MessageTask(authorizedClients, messages), 0, 100, TimeUnit.MILLISECONDS);
 
             while (true) {
-                Socket newClient = chatServer.accept();
-                logger.info("Запрос подключения с адреса {}:{}", newClient.getInetAddress(), newClient.getPort());
-                newConnections.put(newClient);
+                Socket newConnection = chatServer.accept();
+                logger.info("Запрос подключения с адреса {}:{}", newConnection.getInetAddress(), newConnection.getPort());
+                Client newClient = new Client(newConnection);
+                newClients.put(newClient);
+                logger.info("Клиент отправлен в очередь новых подключений");
             }
         } catch (Exception e) {
             logger.error("Критическая ошибка", e);

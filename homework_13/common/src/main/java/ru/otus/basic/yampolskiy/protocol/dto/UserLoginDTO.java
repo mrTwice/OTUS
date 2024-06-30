@@ -1,5 +1,10 @@
 package ru.otus.basic.yampolskiy.protocol.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@JsonSerialize
+@JsonDeserialize
 public class UserLoginDTO {
     private String email;
     private String password;

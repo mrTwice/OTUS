@@ -1,14 +1,20 @@
 package ru.otus.basic.yampolskiy.entities;
 
+import java.io.*;
 import java.net.Socket;
 
-public class Client<T> {
+public class Client {
     private final Socket socket;
+    private DataInputStream in;
+    private DataOutputStream out;
     private User user;
-    private T cachedData;
+    private boolean isAuthorized;
+    private String cachedData;
 
-    public Client(Socket socket) {
+    public Client(Socket socket) throws IOException {
         this.socket = socket;
+        this.in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+        this.out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
     }
 
     public Socket getSocket() {
@@ -23,11 +29,27 @@ public class Client<T> {
         this.user = user;
     }
 
-    public T getCachedData() {
+    public String getCachedData() {
         return cachedData;
     }
 
-    public void setCachedData(T cachedData) {
+    public void setCachedData(String cachedData) {
         this.cachedData = cachedData;
+    }
+
+    public DataInputStream getIn() {
+        return in;
+    }
+
+    public DataOutputStream getOut() {
+        return out;
+    }
+
+    public boolean isAuthorized() {
+        return isAuthorized;
+    }
+
+    public void setAuthorized(boolean authorized) {
+        isAuthorized = authorized;
     }
 }

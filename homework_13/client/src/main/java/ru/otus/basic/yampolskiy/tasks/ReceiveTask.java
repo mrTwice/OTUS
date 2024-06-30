@@ -43,5 +43,6 @@ public class ReceiveTask implements Runnable {
             Thread.currentThread().interrupt(); // Восстанавливаем статус прерывания
             logger.error("Поток был прерван", e);
         }
+        logger.info("Задача отработала");
     }
 }
