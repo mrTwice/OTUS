@@ -17,6 +17,10 @@ import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 
 public class InputThread extends Thread {
+    private final String USERNAME;
+    private final String EMAIL;
+    private final String PASSWORD;
+    private boolean isRegistred = false;
     private final Scanner input = new Scanner(System.in);
     private static final Logger logger = LogManager.getLogger(InputThread.class);
     private final BlockingQueue<Parcel<?>> parcels;
@@ -33,6 +37,12 @@ public class InputThread extends Thread {
         } catch (IOException e) {
             logger.error("Ошибка получения входящего потока", e);
         }
+        System.out.print("Введите имя пользователя: ");
+        USERNAME = input.next();
+        System.out.print("Введите адрес электронной почты: ");
+        EMAIL = input.next();
+        System.out.print("Введите пароль: ");
+        PASSWORD = input.next();
     }
 
     @Override
@@ -63,9 +73,13 @@ public class InputThread extends Thread {
         String payload = parcel.getPayload();
         logger.info("Command: {}, payload: {}\n", command, payload);
         if (command.equals(Command.IDENTIFICATION)) {
-            UserRegistrationDTO newUser = new UserRegistrationDTO("Tank", "tank@mail.ru", "12345678"); // TODO: тестовая отправка;
+            UserRegistrationDTO newUser = new UserRegistrationDTO(USERNAME, EMAIL, PASSWORD);
             Parcel<UserRegistrationDTO> registration = new Parcel<>(Command.REGISTER, newUser);
             parcels.put(registration);
+        }
+
+        if(command.equals(Command.REGISTER_COMPLETE)){
+            logger.info("Вы успешно зарегистрированы.");
         }
     }
 
