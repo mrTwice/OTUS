@@ -1,5 +1,7 @@
 package ru.otus.basic.yampolskiy.mvp;
 
+import ru.otus.basic.yampolskiy.protocol.Message;
+
 import java.util.Scanner;
 
 public class View {
@@ -33,8 +35,12 @@ public class View {
         return input.nextInt();
     }
 
-    public void printMessage(String message) {
-        System.out.println(message);
+    public void printInfoMessage(String message) {
+        System.out.printf(message);
+    }
+
+    public void printChatMessage(Message message){
+        System.out.printf("%s: %s", message.getSender(), message.getMessage());
     }
 
 }

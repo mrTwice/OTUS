@@ -35,7 +35,7 @@ public class CommonTask implements Runnable{
                     Parcel<?> parcel = objectMapper.readValue(rawParcel, new TypeReference<Parcel<?>>() {
                     });
                     processParcel(parcel);
-                } catch (JsonProcessingException e) {
+                } catch (JsonProcessingException | InterruptedException e) {
                     logger.error("Ошибка десериализации объекта ");
                 }
             }
@@ -55,7 +55,7 @@ public class CommonTask implements Runnable{
         }
     }
 
-    private void processParcel(Parcel<?> parcel) {
+    private void processParcel(Parcel<?> parcel) throws InterruptedException {
         Command command = parcel.getCommand();
         switch (command){
             case Command.REGISTER_SUCCESSFUL-> {
@@ -69,7 +69,13 @@ public class CommonTask implements Runnable{
                 updateLoginStatus(true);
             }
             case Command.LOGIN_UNSUCCESSFUL -> updateLoginStatus(false);
-            case Command.MESSAGE ->{}
+            case Command.MESSAGE ->{
+                Parcel<Message> parcelMessage = (Parcel<Message>) parcel;
+                Message message =  parcelMessage.getPayload();
+                messages.put(message);
+                commonController.showMessage(message);
+
+            }
             default -> logger.info("Неподдерживаемая команда {}", command);
         }
     }

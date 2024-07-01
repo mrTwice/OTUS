@@ -19,14 +19,14 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class RegistrationTask implements Runnable, Task {
+public class RegistrationHandleTask implements Runnable, Task {
     private final BlockingQueue<Client> newClients;
     private final BlockingQueue<Client> registrationQueue;
-    private final Logger logger = LogManager.getLogger(RegistrationTask.class);
+    private final Logger logger = LogManager.getLogger(RegistrationHandleTask.class);
     private final ObjectMapper objectMapper = ObjectMapperSingleton.getINSTANCE();
     private final UserService userService;
 
-    public RegistrationTask(BlockingQueue<Client> newClients, BlockingQueue<Client> registrationQueue) {
+    public RegistrationHandleTask(BlockingQueue<Client> newClients, BlockingQueue<Client> registrationQueue) {
         this.newClients = newClients;
         this.registrationQueue = registrationQueue;
         this.userService = UserServiceImpl.getUserService();
@@ -34,7 +34,7 @@ public class RegistrationTask implements Runnable, Task {
 
     @Override
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
+//        while (!Thread.currentThread().isInterrupted()) {
             Client client;
             try {
                 client = registrationQueue.poll(1, TimeUnit.SECONDS);
@@ -63,7 +63,7 @@ public class RegistrationTask implements Runnable, Task {
             } catch (InterruptedException | IOException e) {
                 logger.error("Ошибка получения клинета из очереди регистрации");
             }
-        }
+//        }
     }
 
     private User registrationNewUser(UserRegistrationDTO userRegistrationDTO) throws UserAlreadyExistException {

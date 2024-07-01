@@ -15,8 +15,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Model {
     private static final Logger logger = LogManager.getLogger(Model.class);
-    private boolean isRegistered;
-    private boolean isLoggined;
     private final Presenter presenter;
     private final BlockingQueue<Message> messages;
     private final BlockingQueue<String> incoming;
@@ -75,5 +73,9 @@ public class Model {
 
     public boolean isLoggined() {
         return presenter.isLogined();
+    }
+
+    public void showMessage(Message message){
+        presenter.showNewMessage(message);
     }
 }

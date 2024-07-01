@@ -15,19 +15,18 @@ import ru.otus.basic.yampolskiy.service.UserServiceImpl;
 import ru.otus.basic.yampolskiy.utils.ObjectMapperSingleton;
 
 import java.io.*;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class AuthenticationTask implements Runnable, Task {
+public class AuthenticationHandleTask implements Runnable, Task {
     private final BlockingQueue<Client> newClients;
     private final BlockingQueue<Client> authenticationQueue;
-    private final List<Client> authorizedClients;
-    private final Logger logger = LogManager.getLogger(AuthenticationTask.class);
+    private final BlockingQueue<Client> authorizedClients;
+    private final Logger logger = LogManager.getLogger(AuthenticationHandleTask.class);
     private final ObjectMapper objectMapper = ObjectMapperSingleton.getINSTANCE();
     private final UserService userService;
 
-    public AuthenticationTask(BlockingQueue<Client> newClients, BlockingQueue<Client> authenticationQueue, List<Client> authorizedClients) {
+    public AuthenticationHandleTask(BlockingQueue<Client> newClients, BlockingQueue<Client> authenticationQueue, BlockingQueue<Client> authorizedClients) {
         this.newClients = newClients;
         this.authenticationQueue = authenticationQueue;
         this.authorizedClients = authorizedClients;
@@ -36,7 +35,7 @@ public class AuthenticationTask implements Runnable, Task {
 
     @Override
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
+//        while (!Thread.currentThread().isInterrupted()) {
             Client client;
             try {
                 client = authenticationQueue.poll(1, TimeUnit.SECONDS);
@@ -54,7 +53,7 @@ public class AuthenticationTask implements Runnable, Task {
                             String json = objectMapper.writeValueAsString(authorizedUser);
                             client.getOut().writeUTF(json);
                             client.getOut().flush();
-                            authorizedClients.add(client);
+                            authorizedClients.put(client);
                             logger.info("Клиент");
                         }
                     } catch (Exception e) {
@@ -69,7 +68,7 @@ public class AuthenticationTask implements Runnable, Task {
             } catch (InterruptedException | IOException e) {
                 logger.error("Ошибка получения клинета из очереди аутентификации");
             }
-        }
+//        }
     }
 
     private User authorizationUser(UserLoginDTO userLoginDTO) throws UserNotFoundException {

@@ -41,4 +41,8 @@ public class CommonController {
         return model.isLoggined();
     }
 
+    public void showMessage(Message message){
+        model.showMessage(message);
+    }
+
 }

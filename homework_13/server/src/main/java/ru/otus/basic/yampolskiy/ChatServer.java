@@ -4,13 +4,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.otus.basic.yampolskiy.entities.Client;
 import ru.otus.basic.yampolskiy.handlers.*;
-import ru.otus.basic.yampolskiy.handlers.AuthenticationTask;
-import ru.otus.basic.yampolskiy.handlers.RegistrationTask;
+import ru.otus.basic.yampolskiy.handlers.AuthenticationHandleTask;
+import ru.otus.basic.yampolskiy.handlers.RegistrationHandleTask;
 import ru.otus.basic.yampolskiy.protocol.Message;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
 import java.util.concurrent.*;
 
 
@@ -21,17 +21,17 @@ public class ChatServer {
     private static final BlockingQueue<Client> newClients = new LinkedBlockingQueue<>();
     private static final BlockingQueue<Client> registration = new LinkedBlockingQueue<>();
     private static final BlockingQueue<Client> authentication = new LinkedBlockingQueue<>();
-    private static final List<Client> authorizedClients = new CopyOnWriteArrayList<>();
+    private static final BlockingQueue<Client> authorizedClients = new LinkedBlockingQueue<>();
     private static final BlockingQueue<Message> messages = new LinkedBlockingQueue<>();
 
-    public static void main(String[] args) {
+    public void start() {
         try (ServerSocket chatServer = new ServerSocket(PORT)) {
             logger.info("Сервер запущен на порту: {}", PORT);
 
-            executorService.scheduleWithFixedDelay(new ConnectionTask(newClients, registration, authentication), 0, 500, TimeUnit.MILLISECONDS);
-            executorService.scheduleWithFixedDelay(new RegistrationTask(newClients, registration), 0, 500, TimeUnit.MILLISECONDS);
-            executorService.scheduleWithFixedDelay(new AuthenticationTask(newClients, authentication, authorizedClients), 0, 500, TimeUnit.MILLISECONDS);
-            executorService.scheduleWithFixedDelay(new MessageTask(authorizedClients, messages), 0, 100, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new ConnectionHandleTask(newClients, registration, authentication), 0, 1000, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new RegistrationHandleTask(newClients, registration), 0, 1000, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new AuthenticationHandleTask(newClients, authentication, authorizedClients), 0, 1000, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new MessageHandleTask(this, authorizedClients, messages), 0, 1000, TimeUnit.MILLISECONDS);
 
             while (true) {
                 Socket newConnection = chatServer.accept();
@@ -56,11 +56,19 @@ public class ChatServer {
                     logger.error("ExecutorService не завершился");
                 }
             }
-        } catch (InterruptedException ex) {
-            logger.error("Ожидание завершения ExecutorService было прервано", ex);
+        } catch (InterruptedException e) {
+            logger.error("Ожидание завершения ExecutorService было прервано", e);
             executorService.shutdownNow();
             Thread.currentThread().interrupt();
         }
         logger.info("Сервер завершил работу");
+    }
+
+    public void sendMessage(String message) throws IOException {
+        for (Client client: authorizedClients){
+                client.getOut().writeUTF(message);
+                client.getOut().flush();
+                logger.info("Данные отправлены клиенту: {}", client.getUser().getNickname());
+        }
     }
 }

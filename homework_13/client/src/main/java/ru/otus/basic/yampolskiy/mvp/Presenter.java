@@ -1,9 +1,13 @@
 package ru.otus.basic.yampolskiy.mvp;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import ru.otus.basic.yampolskiy.protocol.Command;
 import ru.otus.basic.yampolskiy.protocol.Message;
+import ru.otus.basic.yampolskiy.protocol.Parcel;
 import ru.otus.basic.yampolskiy.protocol.dto.UserLoginDTO;
 import ru.otus.basic.yampolskiy.protocol.dto.UserRegistrationDTO;
+import ru.otus.basic.yampolskiy.utils.ObjectMapperSingleton;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -46,7 +50,7 @@ public class Presenter {
         this.model = new Model(this, messages);
     }
 
-    public void start(){
+    public void start() throws JsonProcessingException {
         boolean stopProgram = false;
         view.printMenu();
         while (!stopProgram){
@@ -59,7 +63,7 @@ public class Presenter {
                         UserRegistrationDTO newUser = new UserRegistrationDTO(newNickname, email, password);
                         model.sendRegisterRequest(newUser);
                     } else {
-                        view.printMessage("Вы уже зарегистрированы.");
+                        view.printInfoMessage("Вы уже зарегистрированы.");
                     }
                 }
                 case 2 -> {
@@ -69,12 +73,14 @@ public class Presenter {
                         UserLoginDTO userLoginDTO = new UserLoginDTO(email, password);
                         model.sendLoginRequest(userLoginDTO);
                     }else {
-                        view.printMessage("Вы уже авторизованы.");
+                        view.printInfoMessage("Вы уже авторизованы.");
                     }
                 }
                 case 3 -> {
-                    if(!isLogined) {
-                        view.printMessage("Вы не авторизованы");
+                    if(isLogined) {
+                        chatRunning();
+                    } else {
+                        view.printInfoMessage("Вы не авторизованы");
                     }
                 }
                 case 4 -> stopProgram = true;
@@ -82,5 +88,20 @@ public class Presenter {
 
             }
         }
+    }
+
+    private void chatRunning() throws JsonProcessingException {
+        while (true) {
+            String message = view.getInput("Введите сообщение: ");
+            Message message1 = new Message();
+            message1.setMessage(message);
+            Parcel<Message> parcelMessage = new Parcel<>(Command.MESSAGE, message1);
+            String parcel = ObjectMapperSingleton.getINSTANCE().writeValueAsString(parcelMessage);
+            model.send(parcel);
+        }
+    }
+
+    public void showNewMessage(Message message) {
+        view.printChatMessage(message);
     }
 }

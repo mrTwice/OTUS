@@ -4,18 +4,18 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ChatRoom {
-    private final String chatRoomId;
+    private  int Id;
     private  final List<String> contacts = new CopyOnWriteArrayList<>();
 
-    public ChatRoom(String chatRoomId) {
-        this.chatRoomId = chatRoomId;
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int id) {
+        Id = id;
     }
 
     public List<String> getContacts() {
         return contacts;
-    }
-
-    public String getChatRoomId() {
-        return chatRoomId;
     }
 }

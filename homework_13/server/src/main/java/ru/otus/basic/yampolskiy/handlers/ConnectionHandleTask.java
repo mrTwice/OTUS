@@ -13,16 +13,16 @@ import java.io.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class ConnectionTask implements Runnable, Task {
+public class ConnectionHandleTask implements Runnable, Task {
     private final BlockingQueue<Client> newConnections;
     private final BlockingQueue<Client> registration;
     private final BlockingQueue<Client> authentication;
-    private static final Logger logger = LogManager.getLogger(ConnectionTask.class);
+    private static final Logger logger = LogManager.getLogger(ConnectionHandleTask.class);
     private static final ObjectMapper objectMapper = ObjectMapperSingleton.getINSTANCE();
 
-    public ConnectionTask(BlockingQueue<Client> newConnections,
-                          BlockingQueue<Client> registration,
-                          BlockingQueue<Client> authentication) {
+    public ConnectionHandleTask(BlockingQueue<Client> newConnections,
+                                BlockingQueue<Client> registration,
+                                BlockingQueue<Client> authentication) {
         this.newConnections = newConnections;
         this.registration = registration;
         this.authentication = authentication;
@@ -30,20 +30,21 @@ public class ConnectionTask implements Runnable, Task {
 
     @Override
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
+//        while (!Thread.currentThread().isInterrupted()) {
             try {
                 Client client = newConnections.poll(1, TimeUnit.SECONDS);
-                if (client == null) {
-                    continue;
+                if (client != null) {
+                    processing(client);
+//                    continue;
                 }
-                processing(client);
+
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 logger.warn("Поток был прерван", e);
             } catch (Exception e) {
                 logger.error("Ошибка при обработке нового подключения", e);
             }
-        }
+//        }
     }
 
     private void processing(Client client) throws InterruptedException {
