@@ -7,8 +7,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.otus.basic.yampolskiy.controllers.CommonController;
 import ru.otus.basic.yampolskiy.protocol.Command;
+import ru.otus.basic.yampolskiy.protocol.Information;
 import ru.otus.basic.yampolskiy.protocol.Message;
 import ru.otus.basic.yampolskiy.protocol.Parcel;
+import ru.otus.basic.yampolskiy.protocol.dto.UserAuthorizedDTO;
 import ru.otus.basic.yampolskiy.utils.ObjectMapperSingleton;
 
 import java.util.concurrent.BlockingQueue;
@@ -64,15 +66,22 @@ public class CommonTask implements Runnable{
             }
             case Command.REGISTER_UNSUCCESSFUL -> updateRegisteredStatus(false);
             case Command.LOGIN_SUCCESSFUL -> {
-                String nickname =(String) parcel.getPayload();
-                commonController.setNickname(nickname);
+                Parcel<UserAuthorizedDTO> parcelMessage = objectMapper.convertValue(parcel, new TypeReference<Parcel<UserAuthorizedDTO>>() {});
+                UserAuthorizedDTO userAuthorizedDTO = parcelMessage.getPayload();
+                commonController.setAuthorizedUser(userAuthorizedDTO);
                 updateLoginStatus(true);
             }
             case Command.LOGIN_UNSUCCESSFUL -> updateLoginStatus(false);
             case Command.MESSAGE ->{
-                Parcel<Message> parcelMessage = (Parcel<Message>) parcel;
-                Message message =  parcelMessage.getPayload();
+                Parcel<Message> parcelMessage = objectMapper.convertValue(parcel, new TypeReference<Parcel<Message>>() {});
+                Message message = parcelMessage.getPayload();
                 messages.put(message);
+                commonController.showMessage(message);
+
+            }
+            case Command.INFORMATION ->{
+                Parcel<Information> info = objectMapper.convertValue(parcel, new TypeReference<Parcel<Information>>() {});
+                Information message = info.getPayload();
                 commonController.showMessage(message);
 
             }

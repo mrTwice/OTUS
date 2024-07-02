@@ -40,7 +40,8 @@ public class View {
     }
 
     public void printChatMessage(Message message){
-        System.out.printf("%s: %s", message.getSender(), message.getMessage());
+        System.out.println();
+        System.out.printf("[%s] %s: %s\n",message.getTimestamp(), message.getNickname(), message.getMessage());
     }
 
 }

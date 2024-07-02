@@ -11,6 +11,7 @@ import ru.otus.basic.yampolskiy.protocol.Message;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Optional;
 import java.util.concurrent.*;
 
 
@@ -30,7 +31,7 @@ public class ChatServer {
 
             executorService.scheduleWithFixedDelay(new ConnectionHandleTask(newClients, registration, authentication), 0, 1000, TimeUnit.MILLISECONDS);
             executorService.scheduleWithFixedDelay(new RegistrationHandleTask(newClients, registration), 0, 1000, TimeUnit.MILLISECONDS);
-            executorService.scheduleWithFixedDelay(new AuthenticationHandleTask(newClients, authentication, authorizedClients), 0, 1000, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new AuthenticationHandleTask(this,newClients, authentication, authorizedClients), 0, 1000, TimeUnit.MILLISECONDS);
             executorService.scheduleWithFixedDelay(new MessageHandleTask(this, authorizedClients, messages), 0, 1000, TimeUnit.MILLISECONDS);
 
             while (true) {
@@ -69,6 +70,15 @@ public class ChatServer {
                 client.getOut().writeUTF(message);
                 client.getOut().flush();
                 logger.info("Данные отправлены клиенту: {}", client.getUser().getNickname());
+        }
+    }
+
+    public void sendPrivateMessage(String message, String recipientEmail) throws IOException {
+        Optional<Client> recipient = authorizedClients.stream().filter(c -> c.getUser().getEmail().equals(recipientEmail)).findFirst();
+        if(recipient.isPresent()) {
+            Client client = recipient.get();
+            client.getOut().writeUTF(message);
+            client.getOut().flush();
         }
     }
 }

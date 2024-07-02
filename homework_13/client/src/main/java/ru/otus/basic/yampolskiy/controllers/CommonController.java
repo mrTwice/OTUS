@@ -2,6 +2,7 @@ package ru.otus.basic.yampolskiy.controllers;
 
 import ru.otus.basic.yampolskiy.mvp.Model;
 import ru.otus.basic.yampolskiy.protocol.Message;
+import ru.otus.basic.yampolskiy.protocol.dto.UserAuthorizedDTO;
 import ru.otus.basic.yampolskiy.tasks.CommonTask;
 
 import java.util.concurrent.BlockingQueue;
@@ -21,8 +22,8 @@ public class CommonController {
         new Thread(new CommonTask(this, incoming, messages)).start();
     }
 
-    public void setNickname(String nickname){
-        model.setNickname(nickname);
+    public void setAuthorizedUser(UserAuthorizedDTO authUser){
+        model.setUser(authUser);
     }
 
     public void setRegisteredStatus(boolean status) {
@@ -38,7 +39,7 @@ public class CommonController {
     }
 
     public boolean isLogined() {
-        return model.isLoggined();
+        return model.isLogined();
     }
 
     public void showMessage(Message message){

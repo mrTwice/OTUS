@@ -22,7 +22,7 @@ public class LoginController {
     }
 
     public boolean authorization(UserLoginDTO user) {
-        if(!model.isLoggined()) {
+        if(!model.isLogined()) {
             Parcel<UserLoginDTO> userLoginDTOParcel = new Parcel<>(Command.LOGIN, user);
             try {
                 String data = objectMapper.writeValueAsString(userLoginDTOParcel);

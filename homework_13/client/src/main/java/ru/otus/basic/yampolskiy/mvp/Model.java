@@ -7,6 +7,7 @@ import ru.otus.basic.yampolskiy.controllers.LoginController;
 import ru.otus.basic.yampolskiy.controllers.NetworkController;
 import ru.otus.basic.yampolskiy.controllers.RegistrationController;
 import ru.otus.basic.yampolskiy.protocol.Message;
+import ru.otus.basic.yampolskiy.protocol.dto.UserAuthorizedDTO;
 import ru.otus.basic.yampolskiy.protocol.dto.UserLoginDTO;
 import ru.otus.basic.yampolskiy.protocol.dto.UserRegistrationDTO;
 
@@ -16,24 +17,19 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Model {
     private static final Logger logger = LogManager.getLogger(Model.class);
     private final Presenter presenter;
-    private final BlockingQueue<Message> messages;
-    private final BlockingQueue<String> incoming;
-    private final BlockingQueue<String> outcoming;
-    private final NetworkController networkController;
-    private final RegistrationController registrationController;
-    private final LoginController loginController;
-    private final CommonController commonController;
+    private final BlockingQueue<Message> messages = new LinkedBlockingQueue<>();
+    private final BlockingQueue<String> incoming = new LinkedBlockingQueue<>();
+    private final BlockingQueue<String> outcoming  = new LinkedBlockingQueue<>();
+    private final NetworkController networkController  = new NetworkController(incoming, outcoming);
+    private final RegistrationController registrationController  = new RegistrationController( this);
+    private final LoginController loginController  = new LoginController(this);
+    private final CommonController commonController  = new CommonController(this, incoming, messages);
+    private boolean isRegistered = false;
+    private boolean isLogined = false;
 
-    public Model(Presenter presenter, BlockingQueue<Message> messages) {
+    public Model(Presenter presenter) {
         this.presenter = presenter;
-        this.messages = messages;
-        incoming = new LinkedBlockingQueue<>();
-        outcoming = new LinkedBlockingQueue<>();
-        networkController = new NetworkController(incoming, outcoming);
         networkController.connecting();
-        registrationController = new RegistrationController( this);
-        loginController = new LoginController(this);
-        commonController = new CommonController(this, incoming, messages);
         commonController.processing();
     }
 
@@ -47,8 +43,8 @@ public class Model {
         }
     }
 
-    public void setNickname(String nickname){
-        presenter.setNickname(nickname);
+    public void setUser(UserAuthorizedDTO userAuthorizedDTO){
+        presenter.setUser(userAuthorizedDTO);
     }
 
     public boolean sendRegisterRequest(UserRegistrationDTO newUser) {
@@ -60,19 +56,19 @@ public class Model {
     }
 
     public void setRegistrationStatus(boolean status) {
-        presenter.setRegistered(status);
+        isRegistered= status;
     }
 
     public void setLoginStatus(boolean status) {
-        presenter.setLogined(status);
+        isLogined = status;
     }
 
     public boolean isRegistered(){
-        return presenter.isRegistered();
+        return isRegistered;
     }
 
-    public boolean isLoggined() {
-        return presenter.isLogined();
+    public boolean isLogined() {
+        return isLogined;
     }
 
     public void showMessage(Message message){

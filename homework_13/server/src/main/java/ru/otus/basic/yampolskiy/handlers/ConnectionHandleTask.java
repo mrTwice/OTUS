@@ -9,7 +9,7 @@ import ru.otus.basic.yampolskiy.protocol.Command;
 import ru.otus.basic.yampolskiy.protocol.Parcel;
 import ru.otus.basic.yampolskiy.utils.ObjectMapperSingleton;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -30,21 +30,18 @@ public class ConnectionHandleTask implements Runnable, Task {
 
     @Override
     public void run() {
-//        while (!Thread.currentThread().isInterrupted()) {
-            try {
-                Client client = newConnections.poll(1, TimeUnit.SECONDS);
-                if (client != null) {
-                    processing(client);
-//                    continue;
-                }
-
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                logger.warn("Поток был прерван", e);
-            } catch (Exception e) {
-                logger.error("Ошибка при обработке нового подключения", e);
+        try {
+            Client client = newConnections.poll(1, TimeUnit.SECONDS);
+            if (client != null) {
+                processing(client);
             }
-//        }
+
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            logger.warn("Поток был прерван", e);
+        } catch (Exception e) {
+            logger.error("Ошибка при обработке нового подключения", e);
+        }
     }
 
     private void processing(Client client) throws InterruptedException {
@@ -57,7 +54,8 @@ public class ConnectionHandleTask implements Runnable, Task {
                 if (client.getIn().available() > 0) {
                     String responseJson = client.getIn().readUTF();
                     logger.info("Получены данные от клиента: {}", responseJson);
-                    Parcel<?> responseParcel = objectMapper.readValue(responseJson, new TypeReference<Parcel<Object>>() {});
+                    Parcel<?> responseParcel = objectMapper.readValue(responseJson, new TypeReference<Parcel<Object>>() {
+                    });
                     Command command = responseParcel.getCommand();
                     processCommandFromClient(command, responseJson, client);
                     break;
@@ -76,15 +74,15 @@ public class ConnectionHandleTask implements Runnable, Task {
     }
 
     private void processCommandFromClient(Command command, String data, Client client) throws InterruptedException {
-            if (command.equals(Command.REGISTER)) {
-                client.setCachedData(data);
-                registration.put(client);
-                logger.info("Клиент добавлен в очередь регистрации: {}", client.getSocket().getRemoteSocketAddress());
-            } else if (command.equals(Command.LOGIN)) {
-                client.setCachedData(data);
-                authentication.put(client);
-                logger.info("Клиент добавлен в очередь аутентификации: {}", client.getSocket().getRemoteSocketAddress());
-            }
+        if (command.equals(Command.REGISTER)) {
+            client.setCachedData(data);
+            registration.put(client);
+            logger.info("Клиент добавлен в очередь регистрации: {}", client.getSocket().getRemoteSocketAddress());
+        } else if (command.equals(Command.LOGIN)) {
+            client.setCachedData(data);
+            authentication.put(client);
+            logger.info("Клиент добавлен в очередь аутентификации: {}", client.getSocket().getRemoteSocketAddress());
+        }
     }
 
 }

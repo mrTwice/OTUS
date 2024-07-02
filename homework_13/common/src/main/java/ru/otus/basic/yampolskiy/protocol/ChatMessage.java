@@ -3,19 +3,17 @@ package ru.otus.basic.yampolskiy.protocol;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import java.time.LocalDateTime;
-
 @JsonSerialize
 @JsonDeserialize
-public class ChatMessage extends Message{
+public class ChatMessage extends Message {
 
     private int chatId;
 
     public ChatMessage() {
     }
 
-    public ChatMessage(String messageId, String sender, String message, LocalDateTime timestamp, int chatId) {
-        super(messageId, sender, message, timestamp);
+    public ChatMessage(String senderId, String nickname, String email, String message, String timestamp, int chatId) {
+        super(senderId, nickname, email, message, timestamp);
         this.chatId = chatId;
     }
 

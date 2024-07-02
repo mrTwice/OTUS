@@ -52,4 +52,5 @@ public class Client {
     public void setAuthorized(boolean authorized) {
         isAuthorized = authorized;
     }
+
 }
