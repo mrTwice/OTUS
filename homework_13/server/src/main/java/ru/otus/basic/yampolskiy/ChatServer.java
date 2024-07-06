@@ -3,19 +3,15 @@ package ru.otus.basic.yampolskiy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.otus.basic.yampolskiy.entities.Client;
-import ru.otus.basic.yampolskiy.handlers.AuthenticationHandler;
-import ru.otus.basic.yampolskiy.handlers.ConnectionHandler;
-import ru.otus.basic.yampolskiy.handlers.MessageHandler;
-import ru.otus.basic.yampolskiy.handlers.RegistrationHandler;
+import ru.otus.basic.yampolskiy.handlers.*;
+import ru.otus.basic.yampolskiy.handlers.AuthenticationHandleTask;
+import ru.otus.basic.yampolskiy.handlers.RegistrationHandleTask;
 import ru.otus.basic.yampolskiy.protocol.Message;
-import ru.otus.basic.yampolskiy.protocol.dto.UserLoginDTO;
-import ru.otus.basic.yampolskiy.protocol.dto.UserRegistrationDTO;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Optional;
 import java.util.concurrent.*;
 
 
@@ -23,24 +19,27 @@ public class ChatServer {
     private final static int PORT = 9090;
     private static final Logger logger = LogManager.getLogger(ChatServer.class);
     private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(10);
-    private static final BlockingQueue<Client<?>> connections = new LinkedBlockingQueue<>();
-    private static final BlockingQueue<Client<UserRegistrationDTO>> registration = new LinkedBlockingQueue<>();
-    private static final BlockingQueue<Client<UserLoginDTO>> authentication = new LinkedBlockingQueue<>();
-    private static final BlockingQueue<Client<Message>> messages = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<Client> newClients = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<Client> registration = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<Client> authentication = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<Client> authorizedClients = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<Message> messages = new LinkedBlockingQueue<>();
 
     public void start() {
         try (ServerSocket chatServer = new ServerSocket(PORT)) {
             logger.info("Сервер запущен на порту: {}", PORT);
 
-            executorService.scheduleWithFixedDelay(new ConnectionHandler(connections, registration, authentication), 0, 1000, TimeUnit.MILLISECONDS);
-            executorService.scheduleWithFixedDelay(new RegistrationHandler(registration, authentication), 0, 1000, TimeUnit.MILLISECONDS);
-            executorService.scheduleWithFixedDelay(new AuthenticationHandler(authentication, messages), 0, 1000, TimeUnit.MILLISECONDS);
-            executorService.scheduleWithFixedDelay(new MessageHandler(messages), 0, 1000, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new ConnectionHandleTask(newClients, registration, authentication), 0, 1000, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new RegistrationHandleTask(newClients, registration), 0, 1000, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new AuthenticationHandleTask(this,newClients, authentication, authorizedClients), 0, 1000, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(new MessageHandleTask(this, authorizedClients, messages), 0, 1000, TimeUnit.MILLISECONDS);
 
             while (true) {
-                Socket socket = chatServer.accept();
-                logger.info("Запрос подключения с адреса {}:{}", socket.getInetAddress(), socket.getPort());
-                connections.put(new Client<>(this, socket));
+                Socket newConnection = chatServer.accept();
+                logger.info("Запрос подключения с адреса {}:{}", newConnection.getInetAddress(), newConnection.getPort());
+                Client newClient = new Client(newConnection);
+                newClients.put(newClient);
+                logger.info("Клиент отправлен в очередь новых подключений");
             }
         } catch (Exception e) {
             logger.error("Критическая ошибка", e);
@@ -58,36 +57,28 @@ public class ChatServer {
                     logger.error("ExecutorService не завершился");
                 }
             }
-        } catch (InterruptedException ex) {
-            logger.error("Ожидание завершения ExecutorService было прервано", ex);
+        } catch (InterruptedException e) {
+            logger.error("Ожидание завершения ExecutorService было прервано", e);
             executorService.shutdownNow();
             Thread.currentThread().interrupt();
         }
         logger.info("Сервер завершил работу");
     }
 
-    public void closeResources(InputStream in, OutputStream out, Socket socket) {
-        if (in != null) {
-            try {
-                in.close();
-            } catch (IOException e) {
-                logger.error("Ошибка при закрытии DataInputStream", e);
-            }
+    public void sendMessage(String message) throws IOException {
+        for (Client client: authorizedClients){
+                client.getOut().writeUTF(message);
+                client.getOut().flush();
+                logger.info("Данные отправлены клиенту: {}", client.getUser().getNickname());
         }
-        if (out != null) {
-            try {
-                out.close();
-            } catch (IOException e) {
-                logger.error("Ошибка при закрытии DataOutputStream", e);
-            }
-        }
-        if (socket != null && !socket.isClosed()) {
-            try {
-                socket.close();
-                logger.info("Сокет клиента закрыт: {}", socket.getRemoteSocketAddress());
-            } catch (IOException e) {
-                logger.error("Ошибка при закрытии сокета", e);
-            }
+    }
+
+    public void sendPrivateMessage(String message, String recipientEmail) throws IOException {
+        Optional<Client> recipient = authorizedClients.stream().filter(c -> c.getUser().getEmail().equals(recipientEmail)).findFirst();
+        if(recipient.isPresent()) {
+            Client client = recipient.get();
+            client.getOut().writeUTF(message);
+            client.getOut().flush();
         }
     }
 }
