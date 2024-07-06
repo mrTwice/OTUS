@@ -45,6 +45,22 @@ public class Server {
         broadcastMessage("Из чата вышел: " + clientHandler.getUsername());
     }
 
+    public synchronized void kickUser(String username) {
+        ClientHandler clientHandler = null;
+        for (ClientHandler client : clients) {
+            if(client.getUsername().equals(username)){
+                clientHandler = client;
+                break;
+            }
+        }
+        if (clientHandler != null) {
+            clients.remove(clientHandler);
+            clientHandler.sendMessage("Вы удалены из чата");
+            clientHandler.sendMessage("/kicked");
+            broadcastMessage("Пользователь " + clientHandler.getUsername() + " удален администратором");
+        }
+    }
+
     public synchronized void broadcastMessage(String message) {
         for (ClientHandler c : clients) {
             c.sendMessage(message);

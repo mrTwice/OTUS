@@ -59,25 +59,39 @@ public class ClientHandler {
                     sendMessage("Перед работой с чатом необходимо выполнить аутентификацию '/auth login password' или регистрацию '/register login password username'");
                 }
                 while (true) {
-                    String message = in.readUTF();
-                    if (message.startsWith("/")) {
-                        if (message.equals("/exit")) {
-                            sendMessage("/exitok");
-                            break;
-                        }
-
-                        if(message.startsWith("/private")){
-                            if(message.startsWith("/private ")) {
-                                String[] data = getDataPrivateMessage(message);
-                                server.sendPrivateMessage(username, data[0], data[1]);
-                            } else {
-                                sendMessage("Неверная команда приватного сообщения.");
+                    if(in.available()>0){
+                        String message = in.readUTF();
+                        if (message.startsWith("/")) {
+                            if (message.equals("/exit")) {
+                                sendMessage("/exitok");
+                                break;
                             }
-                        }
-                        continue;
-                    }
 
-                    server.broadcastMessage(username + ": " + message);
+                            if (message.startsWith("/private")) {
+                                if (message.startsWith("/private ")) {
+                                    String[] data = getDataPrivateMessage(message);
+                                    server.sendPrivateMessage(username, data[0], data[1]);
+                                } else {
+                                    sendMessage("Неверная команда приватного сообщения.");
+                                }
+                            }
+
+                            if (message.startsWith("/kick")) {
+                                if (message.startsWith("/kick ")) {
+                                    if (server.getAuthenticationProvider().permissionsGranted(this)) {
+                                        String[] data = message.split(" ");
+                                        server.kickUser(data[1]);
+                                    }
+                                } else {
+                                    sendMessage("Недостаточно прав");
+                                }
+                                continue;
+                            }
+                            continue;
+                        }
+
+                        server.broadcastMessage(username + ": " + message);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -94,12 +108,13 @@ public class ClientHandler {
         int startMessage = endUsername + 1;
         String accepter = rawMessage.substring(startUsername, endUsername);
         String msg = rawMessage.substring(startMessage);
-        return new String[] {accepter, msg};
+        return new String[]{accepter, msg};
     }
 
     public void sendMessage(String message) {
         try {
             out.writeUTF(message);
+            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

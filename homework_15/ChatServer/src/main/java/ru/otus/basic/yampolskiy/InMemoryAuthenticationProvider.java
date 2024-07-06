@@ -1,18 +1,32 @@
 package ru.otus.basic.yampolskiy;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryAuthenticationProvider implements AuthenticationProvider {
     private class User {
         private String login;
         private String password;
         private String username;
+        private Role role;
+
 
         public User(String login, String password, String username) {
             this.login = login;
             this.password = password;
             this.username = username;
+        }
+
+        public User(String login, String password, String username, Role role) {
+            this.login = login;
+            this.password = password;
+            this.username = username;
+            this.role = role;
+        }
+
+        private enum Role{
+            ADMIN,
+            USER
         }
     }
 
@@ -22,6 +36,7 @@ public class InMemoryAuthenticationProvider implements AuthenticationProvider {
     public InMemoryAuthenticationProvider(Server server) {
         this.server = server;
         this.users = new ArrayList<>();
+        this.users.add(new User("admin", "admin", "admin", User.Role.ADMIN));
         this.users.add(new User("login1", "pass1", "bob"));
         this.users.add(new User("login2", "pass2", "user2"));
         this.users.add(new User("login3", "pass3", "user3"));
@@ -57,6 +72,21 @@ public class InMemoryAuthenticationProvider implements AuthenticationProvider {
             }
         }
         return false;
+    }
+
+    private boolean isAdmin(String currentUsername){
+
+        Optional<User> optionalUser =  users.stream()
+                .filter(u -> u.username.equals(currentUsername))
+                .findFirst();
+        User user = optionalUser.get();
+        if(user != null &&  user.role.equals(User.Role.ADMIN))
+            return true;
+        else return false;
+    }
+
+    public synchronized boolean permissionsGranted(ClientHandler clientHandler) {
+        return isAdmin(clientHandler.getUsername());
     }
 
     @Override
