@@ -7,21 +7,21 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonDeserialize
 public class ChatMessage extends Message {
 
-    private int chatId;
+    private String chatId;
 
     public ChatMessage() {
     }
 
-    public ChatMessage(String senderId, String nickname, String email, String message, String timestamp, int chatId) {
+    public ChatMessage(String senderId, String nickname, String email, String message, String timestamp, String chatId) {
         super(senderId, nickname, email, message, timestamp);
         this.chatId = chatId;
     }
 
-    public int getChatId() {
+    public String getChatId() {
         return chatId;
     }
 
-    public void setChatId(int chatId) {
+    public void setChatId(String chatId) {
         this.chatId = chatId;
     }
 }
