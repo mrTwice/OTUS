@@ -19,7 +19,7 @@ public class Box <T extends Fruit>  implements Comparable<Box<? extends Fruit>>{
     }
 
     public void moveFruitsTo(Box<? super T> box) {
-        if (box == this) {
+        if (box == null || box == this) {
             return;
         }
         box.fruits.addAll(this.fruits);
