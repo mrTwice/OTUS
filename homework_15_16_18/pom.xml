@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.otus.basic.yampolskiy</groupId>
-    <artifactId>homework_15</artifactId>
+    <artifactId>homework_15_16_18</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>

@@ -5,29 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>ru.otus.basic.yampolskiy</groupId>
-        <artifactId>homework_15</artifactId>
+        <artifactId>homework_15_16_18</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ChatServer</artifactId>
+    <artifactId>ChatClient</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.7.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-exec</artifactId>
-            <version>1.3</version>
-        </dependency>
-    </dependencies>
 
 </project>
