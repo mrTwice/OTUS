@@ -1,5 +1,9 @@
 package ru.otus.basic.yampolskiy;
 
+import ru.otus.basic.yampolskiy.handlers.ClientHandler;
+import ru.otus.basic.yampolskiy.services.AuthenticationProvider;
+import ru.otus.basic.yampolskiy.services.PostgreSQLAuthenticationProvider;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -19,7 +23,7 @@ public class Server {
     public Server(int port) {
         this.port = port;
         this.clients = new ArrayList<>();
-        this.authenticationProvider = new InMemoryAuthenticationProvider(this);
+        this.authenticationProvider = new PostgreSQLAuthenticationProvider(this);
     }
 
     public void start() {
