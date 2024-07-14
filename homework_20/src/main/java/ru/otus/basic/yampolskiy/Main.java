@@ -9,12 +9,13 @@ public class Main {
 
 
     public static void main(String[] args) {
-        while (true) {
+        boolean fileFound = false;
+        while (!fileFound) {
             String path = getInputFromUser("Введите путь до файла: ");
             String phrase = getInputFromUser("Введите строку для поиска: ");
             try {
                 countIncomesInFile(path, phrase);
-                break;
+                fileFound = true;
             } catch (IOException e) {
                 System.out.println("Указанный файл не существует");
             }
@@ -23,7 +24,7 @@ public class Main {
 
     private static String getInputFromUser(String message){
         System.out.print(message);
-        return SCANNER.next();
+        return SCANNER.nextLine();
     }
 
     private static void countIncomesInFile(String path, String phrase) throws IOException {
