@@ -17,7 +17,8 @@ public class PrintCharTask implements Runnable {
             try {
                 taskPrinter.printChar(symbol);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
+                return;
             }
             repeat--;
         }

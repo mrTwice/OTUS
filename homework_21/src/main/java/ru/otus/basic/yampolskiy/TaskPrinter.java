@@ -1,7 +1,7 @@
 package ru.otus.basic.yampolskiy;
 
 public class TaskPrinter {
-    final Object monitor = new Object();
+    private final Object monitor = new Object();
     private char nextChar = 'A';
 
     public void printChar(char symbol) throws InterruptedException {
@@ -10,14 +10,21 @@ public class TaskPrinter {
                 monitor.wait();
             }
             System.out.print(symbol);
-            if (nextChar == 'A') {
-                nextChar = 'B';
-            } else if (nextChar == 'B') {
-                nextChar = 'C';
-            } else if (nextChar == 'C') {
-                nextChar = 'A';
-            }
+            nextChar = getNextChar(nextChar);
             monitor.notifyAll();
+        }
+    }
+
+    private char getNextChar(char currentChar) {
+        switch (currentChar) {
+            case 'A':
+                return 'B';
+            case 'B':
+                return 'C';
+            case 'C':
+                return 'A';
+            default:
+                throw new IllegalArgumentException("Unexpected value: " + currentChar);
         }
     }
 }
