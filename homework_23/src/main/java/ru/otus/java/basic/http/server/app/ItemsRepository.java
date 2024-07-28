@@ -27,4 +27,13 @@ public class ItemsRepository {
         items.add(item);
         return item;
     }
+
+    public Item deleteItem(long id) {
+        return items.stream().filter(item -> item.getId() == id)
+                .findFirst()
+                .map(obj -> {
+                    items.remove(obj);
+                    return obj;
+                }).orElseThrow(RuntimeException::new);
+    }
 }

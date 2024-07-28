@@ -1,6 +1,6 @@
 package ru.otus.java.basic.http.server.processors;
 
-import ru.otus.java.basic.http.server.HttpRequest;
+import ru.otus.java.basic.http.server.http.HttpRequest;
 
 import java.io.IOException;
 import java.io.OutputStream;

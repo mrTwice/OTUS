@@ -1,9 +1,14 @@
 package ru.otus.java.basic.http.server;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.otus.java.basic.http.server.app.ItemsRepository;
+import ru.otus.java.basic.http.server.http.HttpHeader;
+import ru.otus.java.basic.http.server.http.HttpRequest;
+import ru.otus.java.basic.http.server.http.HttpResponse;
+import ru.otus.java.basic.http.server.http.HttpStatus;
 import ru.otus.java.basic.http.server.processors.*;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -11,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Dispatcher {
+    private Logger logger = LogManager.getLogger(Dispatcher.class);
+    private ObjectMapper objectMapper = ObjectMapperSingleton.getInstance();
     private Map<String, RequestProcessor> processors;
     private RequestProcessor defaultNotFoundRequestProcessor;
     private RequestProcessor defaultInternalServerErrorProcessor;
@@ -25,6 +32,7 @@ public class Dispatcher {
         this.processors.put("GET /another", new AnotherHelloWorldRequestProcessor());
         this.processors.put("GET /calculator", new CalculatorRequestProcessor());
         this.processors.put("GET /items", new GetAllItemsProcessor(itemsRepository));
+        this.processors.put("DELETE /items", new DeleteItemRequestProcessor(itemsRepository));
         this.processors.put("POST /items", new CreateNewItemProcessor(itemsRepository));
 
         this.defaultNotFoundRequestProcessor = new DefaultNotFoundRequestProcessor();
@@ -41,12 +49,14 @@ public class Dispatcher {
         } catch (BadRequestException e) {
             e.printStackTrace();
             DefaultErrorDto defaultErrorDto = new DefaultErrorDto("CLIENT_DEFAULT_ERROR", e.getMessage());
-            String jsonError = new Gson().toJson(defaultErrorDto);
-            String response = "" +
-                    "HTTP/1.1 400 Bad Request\r\n" +
-                    "Content-Type: application/json\r\n" +
-                    "\r\n" +
-                    jsonError;
+            String jsonError = objectMapper.writeValueAsString(defaultErrorDto);
+            String response = new HttpResponse.Builder()
+                    .setProtocolVersion(request.getProtocolVersion())
+                    .setStatus(HttpStatus.BAD_REQUEST)
+                    .addHeader(HttpHeader.CONTENT_TYPE, "application/json")
+                    .setBody(jsonError)
+                    .build()
+                    .toString();
             out.write(response.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();

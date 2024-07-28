@@ -24,11 +24,20 @@ public class HttpResponse extends Http {
     @Override
     public String toString() {
         StringBuilder responseBuilder = new StringBuilder();
-        responseBuilder.append(protocolVersion).append(" ").append(status.toString()).append("\r\n");
-        for (Map.Entry<String, String> entry : headers.getAllHeaders().entrySet()) {
-            responseBuilder.append(entry.getKey()).append(": ").append(entry.getValue()).append("\r\n");
+        responseBuilder.append(protocolVersion != null ? protocolVersion : "null")
+                .append(" ")
+                .append(status != null ? status.toString() : "null")
+                .append("\r\n");
+
+        if (headers != null) {
+            for (Map.Entry<String, String> entry : headers.getAllHeaders().entrySet()) {
+                responseBuilder.append(entry.getKey()).append(": ").append(entry.getValue()).append("\r\n");
+            }
         }
-        responseBuilder.append("\r\n").append(body);
+
+        responseBuilder.append("\r\n")
+                .append(body != null ? body : "null");
+
         return responseBuilder.toString();
     }
 

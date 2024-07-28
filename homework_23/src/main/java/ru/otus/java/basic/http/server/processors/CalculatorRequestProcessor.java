@@ -1,7 +1,10 @@
 package ru.otus.java.basic.http.server.processors;
 
 import ru.otus.java.basic.http.server.BadRequestException;
-import ru.otus.java.basic.http.server.HttpRequest;
+import ru.otus.java.basic.http.server.http.HttpHeader;
+import ru.otus.java.basic.http.server.http.HttpRequest;
+import ru.otus.java.basic.http.server.http.HttpResponse;
+import ru.otus.java.basic.http.server.http.HttpStatus;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,12 +32,13 @@ public class CalculatorRequestProcessor implements RequestProcessor {
         }
 
         String result = a + " + " + b + " = " + (a + b);
-
-        String response = "" +
-                "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: text/html\r\n" +
-                "\r\n" +
-                "<html><body><h1>" + result + "</h1></body></html>";
+        String response = new HttpResponse.Builder()
+                .setProtocolVersion(request.getProtocolVersion())
+                .setStatus(HttpStatus.OK)
+                .addHeader(HttpHeader.CONTENT_TYPE, "text/html")
+                .setBody("<html><body><h1>" + result + "</h1></body></html>")
+                .build()
+                .toString();
         out.write(response.getBytes(StandardCharsets.UTF_8));
     }
 }

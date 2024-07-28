@@ -1,10 +1,13 @@
 package ru.otus.java.basic.http.server.http;
 
-
 import java.net.URI;
 
-public class HttpParser {
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+public class HttpParser {
+    private static Logger logger = LogManager.getLogger(HttpParser.class);
 
     public static HttpRequest parseRawHttp(String rawHttp) {
         HttpRequest httpRequest = new HttpRequest();
@@ -12,6 +15,7 @@ public class HttpParser {
         parseRequestLine(requestLine, httpRequest);
         httpRequest.setHeaders(getHeaders(rawHttp));
         httpRequest.setBody(getBody(rawHttp));
+        logger.log(Level.INFO, httpRequest);
         return httpRequest;
     }
 
@@ -22,7 +26,6 @@ public class HttpParser {
         // Первая строка запроса - стартовая строка
         return requestLines[0];
     }
-
 
     private static void parseRequestLine(String requestLines, HttpRequest httpRequest) {
 
