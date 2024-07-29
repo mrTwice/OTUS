@@ -3,7 +3,11 @@ package ru.otus.java.basic.http.server.processors;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.otus.java.basic.http.server.BadRequestException;
+import ru.otus.java.basic.http.server.Dispatcher;
 import ru.otus.java.basic.http.server.ObjectMapperSingleton;
 import ru.otus.java.basic.http.server.app.Item;
 import ru.otus.java.basic.http.server.app.ItemsRepository;
@@ -17,6 +21,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class CreateNewItemProcessor implements RequestProcessor {
+    private Logger logger = LogManager.getLogger(CreateNewItemProcessor.class);
     private ObjectMapper objectMapper = ObjectMapperSingleton.getInstance();
     private ItemsRepository itemsRepository;
 
@@ -38,7 +43,7 @@ public class CreateNewItemProcessor implements RequestProcessor {
                     .toString();
             out.write(response.getBytes(StandardCharsets.UTF_8));
         } catch (JsonParseException e) {
-            e.printStackTrace();
+            logger.log(Level.WARN, e.getMessage());
             throw new BadRequestException("Некорректный формат входящего JSON объекта");
         }
     }

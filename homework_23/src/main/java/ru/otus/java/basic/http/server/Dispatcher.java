@@ -1,6 +1,7 @@
 package ru.otus.java.basic.http.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.otus.java.basic.http.server.app.ItemsRepository;
@@ -47,7 +48,7 @@ public class Dispatcher {
             }
             processors.get(request.getRoutingKey()).execute(request, out);
         } catch (BadRequestException e) {
-            e.printStackTrace();
+            logger.log(Level.WARN, e.getMessage());
             DefaultErrorDto defaultErrorDto = new DefaultErrorDto("CLIENT_DEFAULT_ERROR", e.getMessage());
             String jsonError = objectMapper.writeValueAsString(defaultErrorDto);
             String response = new HttpResponse.Builder()
@@ -59,7 +60,7 @@ public class Dispatcher {
                     .toString();
             out.write(response.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.WARN, e.getMessage());
             defaultInternalServerErrorProcessor.execute(request, out);
         }
     }

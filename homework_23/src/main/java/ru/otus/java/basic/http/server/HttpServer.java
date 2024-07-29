@@ -30,7 +30,7 @@ public class HttpServer {
                 threadPool.submit(new RequestHandler(socket, dispatcher));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.ERROR, e.getMessage());
         }
     }
 }

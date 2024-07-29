@@ -15,7 +15,7 @@ public class HttpParser {
         parseRequestLine(requestLine, httpRequest);
         httpRequest.setHeaders(getHeaders(rawHttp));
         httpRequest.setBody(getBody(rawHttp));
-        logger.log(Level.INFO, httpRequest);
+        logger.log(Level.DEBUG, httpRequest);
         return httpRequest;
     }
 

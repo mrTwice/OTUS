@@ -29,16 +29,16 @@ public class RequestHandler implements Runnable {
             byte[] buffer = new byte[8192];
             int n = in.read(buffer);
             String rawRequest = new String(buffer, 0, n);
-            logger.log(Level.INFO, rawRequest);
+            logger.log(Level.DEBUG, rawRequest);
             HttpRequest httpRequest = parseRawHttp(rawRequest);
             dispatcher.execute(httpRequest, out);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARN, e.getMessage());
         } finally {
             try {
                 socket.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.log(Level.WARN, e.getMessage());
             }
         }
     }
