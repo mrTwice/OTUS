@@ -1,12 +1,19 @@
 package ru.otus.java.basic.http.server;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import ru.otus.java.basic.http.server.http.HttpRequest;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class RequestHandler implements Runnable {
+import static ru.otus.java.basic.http.server.http.HttpParser.parseRawHttp;
 
+public class RequestHandler implements Runnable {
+    private Logger logger = LogManager.getLogger(RequestHandler.class);
     private Socket socket;
     private Dispatcher dispatcher;
 
@@ -22,16 +29,16 @@ public class RequestHandler implements Runnable {
             byte[] buffer = new byte[8192];
             int n = in.read(buffer);
             String rawRequest = new String(buffer, 0, n);
-            HttpRequest request = new HttpRequest(rawRequest);
-            request.printInfo(true);
-            dispatcher.execute(request, out);
+            logger.log(Level.DEBUG, rawRequest);
+            HttpRequest httpRequest = parseRawHttp(rawRequest);
+            dispatcher.execute(httpRequest, out);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARN, e.getMessage());
         } finally {
             try {
                 socket.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.log(Level.WARN, e.getMessage());
             }
         }
     }
